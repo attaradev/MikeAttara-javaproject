@@ -1,14 +1,14 @@
-package dev.attara.stockify.infrastructure.security.config;
+package dev.attara.stockify.application.security.config;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import dev.attara.stockify.application.security.CustomUserDetailsService;
+import dev.attara.stockify.application.security.JwtTokenService;
+import dev.attara.stockify.application.security.JwtTokenServiceImpl;
+import dev.attara.stockify.application.security.RSAKeyProvider;
 import dev.attara.stockify.domain.repository.UserRepository;
-import dev.attara.stockify.infrastructure.security.CustomUserDetailsService;
-import dev.attara.stockify.infrastructure.security.JwtTokenService;
-import dev.attara.stockify.infrastructure.security.JwtTokenServiceImpl;
-import dev.attara.stockify.infrastructure.security.RSAKeyProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

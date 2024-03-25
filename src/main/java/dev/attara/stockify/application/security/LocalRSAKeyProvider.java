@@ -1,4 +1,4 @@
-package dev.attara.stockify.infrastructure.security;
+package dev.attara.stockify.application.security;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.stereotype.Component;

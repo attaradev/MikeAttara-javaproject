@@ -1,7 +1,7 @@
 package dev.attara.stockify.application.service.impl;
 
 import dev.attara.stockify.application.service.AuthService;
-import dev.attara.stockify.infrastructure.security.JwtTokenService;
+import dev.attara.stockify.application.security.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,4 +1,4 @@
-package dev.attara.stockify.infrastructure.security;
+package dev.attara.stockify.application.security;
 
 
 import org.springframework.security.core.Authentication;

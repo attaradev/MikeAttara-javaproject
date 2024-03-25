@@ -12,18 +12,22 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 public class OrderController {
     private final OrderService orderService;
 
     @MutationMapping
     @Secured({})
-    public OrderRecord createOrder(@Argument List<ProductLineDTO> productLines) {
+    public OrderRecord createOrder(@Argument List<ProductLineDTO> productLines, Principal principal) {
+        System.out.println(principal);
         Long userId = 1L; // Get Current user Id
         return orderService.createOrder(new CreateOrderDTO(userId, productLines));
     }
@@ -45,7 +49,8 @@ public class OrderController {
     }
 
     @QueryMapping
-    public List<OrderRecord> orders() {
+    public List<OrderRecord> orders(Principal principal) {
+        System.out.println(principal);
         return orderService.allOrders();
     }
 

@@ -1,4 +1,4 @@
-package dev.attara.stockify.infrastructure.security;
+package dev.attara.stockify.application.security;
 
 import dev.attara.stockify.domain.exception.UserNotFoundException;
 import dev.attara.stockify.domain.model.User;
