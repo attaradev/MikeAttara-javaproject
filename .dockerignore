@@ -1,0 +1,34 @@
+# Exclude Maven build artifacts
+target/
+!target/*.jar
+
+# Exclude IDE-specific files and directories
+.idea/
+*.iml
+
+# Exclude logs
+logs/
+
+# Exclude configuration files that are not needed in the Docker image
+*.properties
+*.yml
+
+# Exclude temporary files
+*.tmp
+
+# Exclude test-related files
+test/
+*.test
+
+# Exclude Git-related files
+.git/
+.gitignore
+
+# Exclude Docker-related files (if they are not needed in the Docker image)
+Dockerfile
+.dockerignore
+
+# Exclude other unnecessary files and directories
+*.log
+*.zip
+*.tar.gz

@@ -1,0 +1,86 @@
+type Query {
+    users: [User!]!
+    user(id: ID!): User
+    products: [Product!]!
+    product(id: ID!): Product
+    orders: [Order!]!
+    order(id: ID!): Order
+    ordersByUser(userId: ID!): [Order!]!
+    productsInOrder(orderId: ID!): [ProductLine!]!
+    lowStockProducts(threshold: Int): [Product!]!
+}
+
+type Mutation {
+    createUser(user: CreateUserInput): User
+    updateUser(id: ID!, data: UpdateUserInput!): User
+    deleteUser(id: ID!): Boolean
+    createProduct(product: CreateProductInput!): Product
+    updateProduct(id: ID!, data: UpdateProductInput): Product
+    deleteProduct(id: ID!): Boolean
+    createOrder(productLines: [ProductLineInput!]!): Order
+    updateOrder(id: ID!, productLines: [ProductLineInput!]!): Order
+    deleteOrder(id: ID!): Boolean
+    accessToken(email: String!, password: String!): String
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: Role!
+    orders: [Order!]!
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+type Product {
+    id: ID!
+    name: String!
+    stock: Int!
+    price: Float!
+}
+
+type ProductLine {
+    productId: ID!
+    quantity: Int!
+}
+
+type Order {
+    id: ID!
+    userId: ID!
+    productLines: [ProductLine!]!
+}
+
+input UpdateProductInput {
+    name: String
+    stock: Int
+    price: Float
+}
+
+input CreateProductInput {
+    name: String!
+    stock: Int!
+    price: Float!
+}
+
+
+input CreateUserInput {
+    name: String!
+    email: String!
+    password: String!
+    role: Role
+}
+
+input UpdateUserInput {
+    name: String
+    email: String
+    role: Role
+}
+
+input ProductLineInput {
+    productId: ID!
+    quantity: Int!
+}
