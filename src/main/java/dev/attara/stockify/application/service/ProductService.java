@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 public interface ProductService {
     ProductRecord createProduct(CreateProductDTO createProductDTO);
-    ProductRecord updateProduct(Long productId, UpdateProductDTO updateProductDTO);
-    ProductRecord getProductById(Long productId);
+    ProductRecord updateProduct(long productId, UpdateProductDTO updateProductDTO);
+    ProductRecord getProductById(long productId);
     List<ProductRecord> getAllProducts();
-    boolean deleteProduct(Long productId);
+    boolean deleteProduct(long productId);
     List<ProductRecord> getLowStockProducts(int threshold);
 }

@@ -8,9 +8,9 @@ import dev.attara.stockify.application.service.OrderService;
 import dev.attara.stockify.domain.exception.OrderNotFoundException;
 import dev.attara.stockify.domain.model.Order;
 import dev.attara.stockify.domain.model.Product;
+import dev.attara.stockify.domain.model.User;
 import dev.attara.stockify.domain.repository.OrderRepository;
 import dev.attara.stockify.domain.repository.ProductRepository;
-import dev.attara.stockify.domain.repository.UserRepository;
 import dev.attara.stockify.infrastructure.persistence.mapper.OrderMapper;
 import dev.attara.stockify.infrastructure.persistence.mapper.ProductLineMapper;
 import lombok.NonNull;
@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderMapper orderMapper;
     private final ProductLineMapper productLineMapper;
@@ -33,14 +32,14 @@ public class OrderServiceImpl implements OrderService {
     public OrderRecord createOrder(CreateOrderDTO createOrderDTO) {
         List<ProductLineDTO> products = createOrderDTO.productLines();
         products.forEach(this::processProductLine);
-        Order order = new Order(orderRepository.nextId(), userRepository.findById(createOrderDTO.userId()));
+        Order order = Order.create(orderRepository.nextId(), createOrderDTO.user());
         order.addProducts(createOrderDTO.productLines());
         orderRepository.save(order);
         return orderMapper.toRecord(order);
     }
 
     @Override
-    public OrderRecord updateOrder(Long orderId, List<ProductLineDTO> productLines) {
+    public OrderRecord updateOrder(long orderId, List<ProductLineDTO> productLines, User user) {
         Order order = orderRepository.findById(orderId);
         order.addProducts(productLines);
         orderRepository.save(order);
@@ -48,31 +47,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderRecord> allOrders() {
+    public List<OrderRecord> allOrders(User user) {
         List<Order> orders = orderRepository.findAll();
         return orders.stream().map(orderMapper::toRecord).collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderRecord> ordersByUserId(Long userId) {
+    public List<OrderRecord> ordersByUserId(long userId, User user) {
         List<Order> orders = orderRepository.findByUserId(userId);
         return orders.stream().map(orderMapper::toRecord).toList();
     }
 
     @Override
-    public OrderRecord getOrderById(Long orderId) {
+    public OrderRecord getOrderById(long orderId, User user) {
         try {
             return orderMapper.toRecord(orderRepository.findById(orderId));
         } catch (OrderNotFoundException e) {
-            // Handle case where order is not found
-            // Log the exception for debugging purposes
             System.err.println("Order not found for ID: " + orderId);
             return null;
         }
     }
 
     @Override
-    public List<ProductLineRecord> getOrderProducts(Long orderId) {
+    public List<ProductLineRecord> getOrderProducts(long orderId, User user) {
         try {
             return orderRepository.findById(orderId).getProductLines()
                     .stream()
@@ -87,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean deleteOrder(Long orderId) {
+    public boolean deleteOrder(long orderId, User user) {
         Order order = orderRepository.findById(orderId);
         orderRepository.delete(order);
         return true;

@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
+
     public User toModel(@NonNull UserEntity entity) {
-        return new User(
+        return User.create(
                 entity.getId(),
-                entity.getName(),
                 entity.getEmail(),
                 entity.getPassword(),
+                entity.getName(),
                 entity.getRole()
         );
     }

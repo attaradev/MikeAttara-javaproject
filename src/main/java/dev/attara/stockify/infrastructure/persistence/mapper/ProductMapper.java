@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper {
     public Product toModel(@NonNull ProductEntity entity) {
-        return new Product(
+        return Product.create(
                 entity.getId(),
                 entity.getName(),
-                entity.getStock(),
-                entity.getPrice()
+                entity.getPrice(),
+                entity.getStock()
         );
     }
 

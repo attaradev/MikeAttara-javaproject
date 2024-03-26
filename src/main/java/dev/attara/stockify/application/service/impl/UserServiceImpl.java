@@ -30,10 +30,7 @@ public class UserServiceImpl implements UserService {
         String email = createUserDTO.email();
         String password = passwordEncoder.encode(createUserDTO.password());
         Role role = createUserDTO.role();
-        if (role == null) {
-            role = Role.USER;
-        }
-        User user = new User(id, name, email, password, role);
+        User user = User.create(id, email, password, name, role);
         userRepository.save(user);
         return new UserRecord(id, name, email, role);
     }

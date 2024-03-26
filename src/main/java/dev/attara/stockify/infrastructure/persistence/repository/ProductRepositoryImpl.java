@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
     private final ProductMapper mapper;
-    private final static int MINIMUM_THRESHOLD = 10;
+    private final static int MINIMUM_THRESHOLD = 1;
 
     @PersistenceContext
     private EntityManager entityManager;

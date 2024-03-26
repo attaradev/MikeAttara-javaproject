@@ -23,7 +23,7 @@ public class OrderMapper {
         List<ProductLineDTO> productLines = entity.getProductLines().stream()
                 .map(this::convert)
                 .toList();
-        Order order = new Order(
+        Order order = Order.create(
                 entity.getId(),
                 userMapper.toModel(entity.getUser())
         );

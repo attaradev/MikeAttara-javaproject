@@ -25,10 +25,9 @@ type Mutation {
 
 type User {
     id: ID!
-    name: String!
+    name: String
     email: String!
     role: Role!
-    orders: [Order!]!
 }
 
 enum Role {
@@ -44,14 +43,14 @@ type Product {
 }
 
 type ProductLine {
-    productId: ID!
+    product: [Product!]!
     quantity: Int!
 }
 
 type Order {
     id: ID!
-    userId: ID!
-    productLines: [ProductLine!]!
+    user: User!
+    productsLines: [ProductLine!]!
 }
 
 input UpdateProductInput {
@@ -68,9 +67,9 @@ input CreateProductInput {
 
 
 input CreateUserInput {
-    name: String!
     email: String!
     password: String!
+    name: String
     role: Role
 }
 

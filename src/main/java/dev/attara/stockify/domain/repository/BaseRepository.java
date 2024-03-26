@@ -8,7 +8,7 @@ public interface BaseRepository<Model> {
     AtomicLong atl = new AtomicLong(0);
 
     default Long nextId() {
-        return atl.addAndGet(new Date().getTime());
+        return atl.addAndGet(1L);
     }
 
     List<Model> findAll();

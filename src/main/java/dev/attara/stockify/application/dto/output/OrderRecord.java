@@ -4,7 +4,7 @@ import java.util.List;
 
 public record OrderRecord(
         Long id,
-        List<ProductLineRecord> products,
+        List<ProductLineRecord> productLines,
         UserRecord user
 ) {
 }

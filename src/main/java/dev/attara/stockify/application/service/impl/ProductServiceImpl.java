@@ -21,31 +21,31 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductRecord createProduct(CreateProductDTO createProductDTO) {
-        Product product = new Product(
+        Product product = Product.create(
                 productRepository.nextId(),
                 createProductDTO.name(),
-                createProductDTO.stock(),
-                createProductDTO.price()
+                createProductDTO.price(),
+                createProductDTO.stock()
         );
         productRepository.save(product);
         return productMapper.toRecord(product);
     }
 
     @Override
-    public ProductRecord updateProduct(Long productId, UpdateProductDTO updateProductDTO) {
+    public ProductRecord updateProduct(long productId, UpdateProductDTO updateProductDTO) {
         Product product = productRepository.findById(productId);
         String name = updateProductDTO.name();
         double price = updateProductDTO.price();
         int stock = updateProductDTO.stock();
-        if(name != null) product.setName(name);
-        if (price > 0) product.setPrice(price);
-        if (stock > 0) product.setStock(stock);
+        product.setName(name);
+        product.setPrice(price);
+        product.setStock(stock);
         productRepository.save(product);
         return productMapper.toRecord(product);
     }
 
     @Override
-    public ProductRecord getProductById(Long productId) {
+    public ProductRecord getProductById(long productId) {
         Product product = productRepository.findById(productId);
         return productMapper.toRecord(product);
     }
@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Long productId) {
+    public boolean deleteProduct(long productId) {
         Product product = productRepository.findById(productId);
         productRepository.delete(product);
         return true;
