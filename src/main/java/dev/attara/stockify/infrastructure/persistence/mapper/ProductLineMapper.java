@@ -25,17 +25,11 @@ public class ProductLineMapper {
     }
 
     public ProductLine mapToDomain(ProductLineDTO dto) {
-        ProductLine productLine = new ProductLine();
-        productLine.setProduct(productRepository.findById(dto.productId()));
-        productLine.setQuantity(dto.quantity());
-        return productLine;
+        return ProductLine.create(productRepository.findById(dto.productId()), dto.quantity());
     }
 
     public ProductLine mapToDomain(ProductLineEntity entity) {
-        ProductLine productLine =  new ProductLine();
-        productLine.setQuantity(entity.getQuantity());
-        productLine.setProduct(productMapper.mapToDomain(entity.getProduct()));
-        return productLine;
+        return ProductLine.create(productMapper.mapToDomain(entity.getProduct()),entity.getQuantity());
     }
 
     public ProductLineEntity mapToEntity(ProductLine productLine) {

@@ -1,66 +1,70 @@
 package dev.attara.stockify.domain.model;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserTest {
+public class UserTest {
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
+    @Test
+    void testCreateUser() {
+        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        assertNotNull(user);
+        assertEquals(1, user.getId());
+        assertEquals("test@example.com", user.getEmail());
+        assertEquals("password", user.getPassword());
+        assertEquals("Test User", user.getName());
+        assertEquals(Role.USER, user.getRole());
     }
 
     @Test
-    void create() {
+    void testCreateUserWithDefaultRole() {
+        User user = User.create(1, "test@example.com", "password", "Test User", null);
+        assertNotNull(user);
+        assertEquals(1, user.getId());
+        assertEquals("test@example.com", user.getEmail());
+        assertEquals("password", user.getPassword());
+        assertEquals("Test User", user.getName());
+        assertEquals(Role.USER, user.getRole());
     }
 
     @Test
-    void isAdmin() {
+    void testCreateUserWithInvalidId() {
+        assertThrows(IllegalArgumentException.class, () -> User.create(0, "test@example.com", "password", "Test User", Role.USER));
     }
 
     @Test
-    void testEquals() {
+    void testCreateUserWithNullEmail() {
+        assertThrows(IllegalArgumentException.class, () -> User.create(1, null, "password", "Test User", Role.USER));
     }
 
     @Test
-    void getId() {
+    void testCreateUserWithNullPassword() {
+        assertThrows(IllegalArgumentException.class, () -> User.create(1, "test@example.com", null, "Test User", Role.USER));
     }
 
     @Test
-    void getEmail() {
+    void testIsNotAdmin() {
+        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        assertTrue(user.isNotAdmin());
     }
 
     @Test
-    void getPassword() {
+    void testEqualsSameObject() {
+        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        assertEquals(user, user);
     }
 
     @Test
-    void getName() {
+    void testEqualsDifferentObjects() {
+        User user1 = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        User user2 = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        assertEquals(user1, user2);
     }
 
     @Test
-    void getRole() {
-    }
-
-    @Test
-    void setEmail() {
-    }
-
-    @Test
-    void setPassword() {
-    }
-
-    @Test
-    void setName() {
-    }
-
-    @Test
-    void setRole() {
+    void testEqualsDifferentClasses() {
+        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
+        assertNotEquals(user, new Object());
     }
 }
