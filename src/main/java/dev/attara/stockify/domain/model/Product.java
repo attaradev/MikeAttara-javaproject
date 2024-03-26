@@ -5,9 +5,13 @@ import lombok.*;
 
 @Getter
 public class Product {
+
     private final long id;
+
     private String name;
+
     private int stock;
+
     private double price;
 
     private Product(long id, String name, int stock, double price) {
@@ -53,4 +57,5 @@ public class Product {
         if (price < 0) throw new IllegalArgumentException("price cannot be negative");
         return price;
     }
+
 }

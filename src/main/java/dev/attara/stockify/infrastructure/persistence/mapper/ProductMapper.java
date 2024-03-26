@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
+
     public Product toModel(@NonNull ProductEntity entity) {
         return Product.create(
                 entity.getId(),
@@ -34,4 +35,5 @@ public class ProductMapper {
         entity.setPrice(model.getPrice());
         return entity;
     }
+
 }

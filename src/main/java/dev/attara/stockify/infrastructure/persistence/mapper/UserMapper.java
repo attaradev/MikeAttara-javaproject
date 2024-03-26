@@ -37,4 +37,5 @@ public class UserMapper {
         entity.setRole(model.getRole());
         return entity;
     }
+
 }

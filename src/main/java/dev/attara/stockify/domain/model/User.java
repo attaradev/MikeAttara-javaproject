@@ -6,10 +6,15 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Setter
 public class User {
+
     private final long id;
+
     @NotNull private String email;
+
     @NotNull private String password;
+
     private String name;
+
     private Role role;
 
     private User(long id, @NonNull String email, @NonNull String password, String name, Role role) {
@@ -30,12 +35,13 @@ public class User {
         return new User(id, email, password, name, role);
     }
 
-    public boolean isAdmin() {
-        return role == Role.ADMIN;
+    public boolean isNotAdmin() {
+        return role != Role.ADMIN;
     }
 
     public boolean equals(Object o) {
         if (this == o) return true;
         return (this.getClass() == o.getClass() && id == ((User) o).id);
     }
+
 }

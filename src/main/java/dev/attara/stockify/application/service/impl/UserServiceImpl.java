@@ -18,14 +18,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserRecord createUser(CreateUserDTO createUserDTO) {
         if (userRepository.userEmailExists(createUserDTO.email())) throw new UserExistsException(createUserDTO.email());
-        Long id = userRepository.nextId();
+        long id = userRepository.nextId();
         String name = createUserDTO.name();
         String email = createUserDTO.email();
         String password = passwordEncoder.encode(createUserDTO.password());
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRecord updateUser(Long userId, UpdateUserDTO updateUserDTO) {
+    public UserRecord updateUser(long userId, UpdateUserDTO updateUserDTO) {
         User user = userRepository.findById(userId);
         if (updateUserDTO.email() != null) {
             user.setEmail(updateUserDTO.email());
@@ -59,15 +62,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream().map(userMapper::toRecord).toList();
     }
     @Override
-    public UserRecord getUserById(Long id) {
+    public UserRecord getUserById(long id) {
         User user = userRepository.findById(id);
         return userMapper.toRecord(user);
     }
 
     @Override
-    public Boolean deleteUser(Long id) {
+    public Boolean deleteUser(long id) {
         User user = userRepository.findById(id);
         userRepository.delete(user);
         return true;
     }
+
 }

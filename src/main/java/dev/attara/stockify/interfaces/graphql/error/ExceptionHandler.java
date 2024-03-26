@@ -27,4 +27,5 @@ public class ExceptionHandler {
         return GraphQLError.newError().errorType(ErrorType.UNAUTHORIZED)
                 .message(exception.getMessage()).build();
     }
+
 }

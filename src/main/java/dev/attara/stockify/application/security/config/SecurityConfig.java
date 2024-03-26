@@ -4,7 +4,10 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import dev.attara.stockify.application.security.*;
+import dev.attara.stockify.application.security.CustomUserDetailsService;
+import dev.attara.stockify.application.security.JwtTokenService;
+import dev.attara.stockify.application.security.JwtTokenServiceImpl;
+import dev.attara.stockify.application.security.RSAKeyProvider;
 import dev.attara.stockify.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -104,4 +107,5 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
 }

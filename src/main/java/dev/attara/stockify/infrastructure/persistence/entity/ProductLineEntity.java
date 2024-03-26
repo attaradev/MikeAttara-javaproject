@@ -14,11 +14,11 @@ import lombok.Setter;
 public class ProductLineEntity {
     @Id
     @Column(nullable = false, name = "product_id")
-    private Long productId;
+    private long productId;
 
     @Id
     @Column(nullable = false, name = "order_id")
-    private Long orderId;
+    private long orderId;
 
     @Column(nullable = false)
     private int quantity;

@@ -5,5 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthService {
+
     String authenticate(String email, String password) throws AuthenticationException, javax.naming.AuthenticationException;
+
 }

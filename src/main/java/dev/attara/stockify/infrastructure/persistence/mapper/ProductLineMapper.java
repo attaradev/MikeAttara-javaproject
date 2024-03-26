@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ProductLineMapper {
+
     private final ProductRepository productRepository;
+
     private final ProductMapper productMapper;
 
     public ProductLineRecord toRecord(@NonNull ProductLine model) {
@@ -31,4 +33,5 @@ public class ProductLineMapper {
         entity.setOrderId(model.getOrderId());
         return entity;
     }
+
 }

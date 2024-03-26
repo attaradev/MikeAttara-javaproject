@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Component
 public class LocalRSAKeyProvider implements RSAKeyProvider {
+
     private final RSAKey rsaKey;
 
     public LocalRSAKeyProvider() throws NoSuchAlgorithmException {
@@ -33,4 +34,5 @@ public class LocalRSAKeyProvider implements RSAKeyProvider {
     public RSAKey getRSAKey() {
         return this.rsaKey;
     }
+
 }

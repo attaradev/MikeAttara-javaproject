@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserInitializer implements CommandLineRunner {
+
     private final UserRepository userRepository;
+
     private final UserService userService;
 
     @Override
@@ -22,4 +24,5 @@ public class UserInitializer implements CommandLineRunner {
             userService.createUser(new CreateUserDTO("user@test.com", password, null, null));
         }
     }
+
 }

@@ -18,17 +18,19 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
-    private final ProductMapper mapper;
+
     private final static int MINIMUM_THRESHOLD = 1;
+
+    private final ProductMapper productMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Product findById(Long id) throws ProductNotFoundException {
+    public Product findById(long id) throws ProductNotFoundException {
         try {
             ProductEntity productEntity = entityManager.find(ProductEntity.class, id);
-            return mapper.toModel(productEntity);
+            return productMapper.toModel(productEntity);
         } catch (Exception e) {
             throw new ProductNotFoundException(id);
         }
@@ -41,7 +43,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .setParameter("threshold", threshold)
                 .getResultList()
                 .stream()
-                .map(mapper::toModel)
+                .map(productMapper::toModel)
                 .collect(Collectors.toList());
     }
 
@@ -50,17 +52,18 @@ public class ProductRepositoryImpl implements ProductRepository {
         return entityManager.createQuery("SELECT p FROM ProductEntity p", ProductEntity.class)
                 .getResultList()
                 .stream()
-                .map(mapper::toModel)
+                .map(productMapper::toModel)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void save(Product product) {
-        entityManager.merge(mapper.toEntity(product));
+        entityManager.merge(productMapper.toEntity(product));
     }
 
     @Override
     public void delete(Product product) {
-        entityManager.remove(mapper.toEntity(product));
+        entityManager.remove(productMapper.toEntity(product));
     }
+
 }

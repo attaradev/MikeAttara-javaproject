@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenServiceImpl implements JwtTokenService {
+
     private final JwtEncoder jwtEncoder;
 
     @Override
@@ -42,4 +43,5 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+
 }

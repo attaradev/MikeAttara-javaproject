@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final AuthenticationManager authenticationManager;
+
     private final JwtTokenService jwtTokenService;
 
     @Override
@@ -22,5 +24,6 @@ public class AuthServiceImpl implements AuthService {
         );
         return jwtTokenService.generateToken(authentication);
     }
+
 }
 

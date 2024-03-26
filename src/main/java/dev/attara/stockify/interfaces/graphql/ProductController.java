@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 public class ProductController {
+
     private final ProductService productService;
 
     @MutationMapping
@@ -53,4 +54,5 @@ public class ProductController {
     List<ProductRecord> lowStockProducts(@Argument int threshold) {
         return productService.getLowStockProducts(threshold);
     }
+
 }

@@ -8,6 +8,6 @@ import java.io.Serializable;
 @ToString
 @AllArgsConstructor
 public class ProductLineId implements Serializable {
-    private final Long orderId;
-    private final Long productId;
+    private final long orderId;
+    private final long productId;
 }

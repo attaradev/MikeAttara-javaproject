@@ -7,9 +7,15 @@ import dev.attara.stockify.application.dto.output.UserRecord;
 import java.util.List;
 
 public interface UserService {
+
     UserRecord createUser(CreateUserDTO createUserDTO);
-    UserRecord updateUser(Long userId, UpdateUserDTO updateUserDTO);
+
+    UserRecord updateUser(long userId, UpdateUserDTO updateUserDTO);
+
     List<UserRecord> allUsers();
-    UserRecord getUserById(Long id);
-    Boolean deleteUser(Long id);
+
+    UserRecord getUserById(long id);
+
+    Boolean deleteUser(long id);
+
 }

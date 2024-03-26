@@ -14,11 +14,12 @@ public class Order {
     private final long id;
     @Getter
     private final User user;
-    private final Map<Long, Integer> products = new HashMap<>();
+    private final Map<Long, Integer> products;
 
     private Order(long id, User user) {
         this.id = id;
         this.user = user;
+        this.products = new HashMap<>();
     }
 
     public static Order create(long id, User user) throws IllegalArgumentException {
@@ -44,7 +45,9 @@ public class Order {
     private void addProduct(ProductLineDTO productLine) {
         long productId = productLine.productId();
         int quantity = productLine.quantity();
-
-        products.merge(productId, quantity, Integer::sum);
+        if (products.containsKey(productId)) {
+            quantity += products.get(productId);
+        }
+        products.put(productId, quantity);
     }
 }

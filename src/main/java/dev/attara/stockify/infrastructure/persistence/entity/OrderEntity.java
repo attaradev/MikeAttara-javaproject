@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "orders")
 public class OrderEntity {
     @Id
-    private Long id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

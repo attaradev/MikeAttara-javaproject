@@ -6,19 +6,19 @@ type Query {
     orders: [Order!]!
     order(id: ID!): Order
     ordersByUser(userId: ID!): [Order!]!
-    productsInOrder(orderId: ID!): [ProductLine!]!
+    productsInOrder(orderId: ID!): [ProductLine!]
     lowStockProducts(threshold: Int): [Product!]!
 }
 
 type Mutation {
-    createUser(user: CreateUserInput): User
-    updateUser(id: ID!, data: UpdateUserInput!): User
+    createUser(user: CreateUserInput): User!
+    updateUser(id: ID!, data: UpdateUserInput!): User!
     deleteUser(id: ID!): Boolean
-    createProduct(product: CreateProductInput!): Product
-    updateProduct(id: ID!, data: UpdateProductInput): Product
+    createProduct(product: CreateProductInput!): Product!
+    updateProduct(id: ID!, data: UpdateProductInput): Product!
     deleteProduct(id: ID!): Boolean
-    createOrder(productLines: [ProductLineInput!]!): Order
-    updateOrder(id: ID!, productLines: [ProductLineInput!]!): Order
+    createOrder(productLines: [ProductLineInput!]!): Order!
+    updateOrder(id: ID!, productLines: [ProductLineInput!]!): Order!
     deleteOrder(id: ID!): Boolean
     accessToken(email: String!, password: String!): String
 }

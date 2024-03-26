@@ -6,6 +6,8 @@ import dev.attara.stockify.application.dto.output.OrderRecord;
 import dev.attara.stockify.application.dto.output.ProductLineRecord;
 import dev.attara.stockify.application.security.AuthenticatedUserProvider;
 import dev.attara.stockify.application.service.OrderService;
+import dev.attara.stockify.domain.exception.NotAuthorizedException;
+import dev.attara.stockify.domain.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -20,7 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 public class OrderController {
+
     private final OrderService orderService;
+
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @MutationMapping
@@ -50,11 +54,14 @@ public class OrderController {
 
     @QueryMapping
     public List<OrderRecord> ordersByUser(@Argument long userId, Principal principal) {
-        return orderService.ordersByUserId(userId, authenticatedUserProvider.user(principal));
+        User user = authenticatedUserProvider.user(principal);
+        if (user.isNotAdmin() && user.getId() != userId) throw new NotAuthorizedException();
+        return orderService.ordersByUserId(userId);
     }
 
     @QueryMapping
     public List<ProductLineRecord> productsInOrder(@Argument long orderId, Principal principal) {
         return orderService.getOrderProducts(orderId, authenticatedUserProvider.user(principal));
     }
+
 }

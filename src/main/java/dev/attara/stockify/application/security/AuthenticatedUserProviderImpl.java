@@ -10,6 +10,7 @@ import java.security.Principal;
 @Component
 @RequiredArgsConstructor
 public class AuthenticatedUserProviderImpl implements AuthenticatedUserProvider{
+
     private final UserRepository userRepository;
 
     @Override

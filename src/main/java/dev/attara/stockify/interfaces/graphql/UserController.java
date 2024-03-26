@@ -22,7 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 public class UserController {
+
     private final UserService userService;
+
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     @MutationMapping
@@ -58,6 +60,6 @@ public class UserController {
     }
 
     private void selfOrAdminOnly(long id, User user) {
-        if (!user.isAdmin() && id != user.getId()) throw new NotAuthorizedException();
+        if (user.isNotAdmin() && id != user.getId()) throw new NotAuthorizedException();
     }
 }

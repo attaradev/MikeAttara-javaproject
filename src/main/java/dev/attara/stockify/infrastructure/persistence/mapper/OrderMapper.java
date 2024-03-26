@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class OrderMapper {
+
     private final ProductLineMapper productLineMapper;
+
     private final UserMapper userMapper;
 
     public Order toModel(@NonNull OrderEntity entity) {
@@ -55,4 +57,5 @@ public class OrderMapper {
     private ProductLineDTO convert(@NonNull ProductLineEntity p) {
         return new ProductLineDTO(p.getProductId(), p.getQuantity());
     }
+
 }

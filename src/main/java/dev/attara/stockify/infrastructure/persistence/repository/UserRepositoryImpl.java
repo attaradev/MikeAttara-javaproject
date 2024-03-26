@@ -10,8 +10,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +18,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
+
     private final UserMapper mapper;
 
 
@@ -27,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
     private EntityManager entityManager;
 
     @Override
-    public User findById(Long id) throws UserNotFoundException {
+    public User findById(long id) throws UserNotFoundException {
         UserEntity user = entityManager.find(UserEntity.class, id);
         if (user == null) {
             throw new UserNotFoundException(id);
@@ -62,8 +61,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Long count() {
-        return (long) findAll().size();
+    public long count() {
+        return findAll().size();
     }
 
 
@@ -82,4 +81,5 @@ public class UserRepositoryImpl implements UserRepository {
     public void delete(User user) {
         entityManager.remove(mapper.toEntity(user));
     }
+
 }

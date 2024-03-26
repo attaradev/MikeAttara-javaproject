@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    private Long id;
+    private long id;
 
     @Column
     private String name;

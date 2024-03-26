@@ -11,10 +11,12 @@ import javax.naming.AuthenticationException;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
 
     @MutationMapping
     public String accessToken(@Argument String email, @Argument String password) throws AuthenticationException {
         return authService.authenticate(email, password);
     }
+
 }

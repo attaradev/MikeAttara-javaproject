@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
+
     private final ProductMapper productMapper;
 
     @Override
@@ -68,4 +70,5 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findLowStockProducts(threshold);
         return products.stream().map(productMapper::toRecord).collect(Collectors.toList());
     }
+
 }
