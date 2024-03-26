@@ -12,7 +12,10 @@ type Query {
 
 type Mutation {
     createUser(userData: CreateUserInput): User!
-    updateUser(userId: ID!, userData: UpdateUserInput!): User!
+    updatePassword(userId: ID!, newPassword: String!): User!
+    updateName(userId: ID!, newName: String!): User!
+    updateEmail(userId: ID!, newEmail: String!): User!
+    updateRole(userId: ID!, newRole: Role!): User!
     deleteUser(userId: ID!): Boolean
     createProduct(productData: CreateProductInput!): Product!
     updateProduct(productId: ID!, productData: UpdateProductInput!): Product!
@@ -69,12 +72,6 @@ input CreateUserInput {
     email: String!
     password: String!
     name: String
-    role: Role
-}
-
-input UpdateUserInput {
-    name: String
-    email: String
     role: Role
 }
 

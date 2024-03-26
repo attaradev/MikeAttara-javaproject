@@ -116,8 +116,4 @@ Stockify comes with a suite of tests to ensure robustness and reliability. Follo
 
 3. After running the tests, review the output to ensure all tests pass successfully.
 
-### Additional Notes
-- Ensure that all dependencies are resolved before running tests.
-- It's recommended to run tests regularly, especially after making changes to the codebase, to maintain code quality and reliability.
-
-By following these steps, you can verify the integrity of Stockify's codebase and ensure that it meets the required standards for functionality and performance. If you encounter any issues or have questions regarding testing, feel free to contact Mike Attara at [mike@attara.dev](mailto:mike@attara.dev).
+If you encounter any issues or have questions regarding testing, feel free to contact me at [mike@attara.dev](mailto:mike@attara.dev).

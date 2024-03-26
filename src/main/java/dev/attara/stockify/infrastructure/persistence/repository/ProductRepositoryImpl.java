@@ -14,6 +14,9 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the ProductRepository interface for accessing and managing ProductEntity objects in the database.
+ */
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -26,6 +29,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Retrieves a product by its unique identifier.
+     *
+     * @param id The unique identifier of the product.
+     * @return The product with the specified ID.
+     * @throws ProductNotFoundException If no product exists with the given ID.
+     */
     @Override
     public Product findById(long id) throws ProductNotFoundException {
         try {
@@ -36,6 +46,12 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
     }
 
+    /**
+     * Retrieves products with stock levels below a specified threshold.
+     *
+     * @param threshold The minimum stock threshold.
+     * @return A list of products with stock levels below the threshold.
+     */
     @Override
     public List<Product> findLowStockProducts(int threshold) {
         if (threshold <= 0) threshold = MINIMUM_THRESHOLD;
@@ -47,6 +63,11 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all products from the database.
+     *
+     * @return A list of all products.
+     */
     @Override
     public List<Product> findAll() {
         return entityManager.createQuery("SELECT p FROM ProductEntity p", ProductEntity.class)
@@ -56,11 +77,21 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Saves a product to the database.
+     *
+     * @param product The product to save.
+     */
     @Override
     public void save(Product product) {
         entityManager.merge(productMapper.mapToEntity(product));
     }
 
+    /**
+     * Deletes a product from the database.
+     *
+     * @param product The product to delete.
+     */
     @Override
     public void delete(Product product) {
         entityManager.remove(productMapper.mapToEntity(product));

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the OrderRepository interface for accessing and managing OrderEntity objects in the database.
+ */
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -31,6 +34,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Retrieves an order by its unique identifier.
+     *
+     * @param id The unique identifier of the order.
+     * @return The order with the specified ID.
+     * @throws OrderNotFoundException If no order exists with the given ID.
+     */
     @Override
     public Order findById(long id) throws OrderNotFoundException {
         OrderEntity orderEntity = entityManager.find(OrderEntity.class, id);
@@ -40,6 +50,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderMapper.mapToDomain(orderEntity);
     }
 
+    /**
+     * Retrieves all orders from the database.
+     *
+     * @return A list of all orders.
+     */
     @Override
     public List<Order> findAll() {
         return entityManager.createQuery("SELECT o FROM OrderEntity o", OrderEntity.class)
@@ -49,6 +64,12 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves orders associated with a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return A list of orders associated with the user.
+     */
     @Override
     public List<Order> findByUserId(long userId) {
         return entityManager.createQuery(
@@ -60,6 +81,11 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Saves an order to the database.
+     *
+     * @param order The order to save.
+     */
     @Override
     public void save(Order order) {
         OrderEntity orderEntity = new OrderEntity();
@@ -76,15 +102,17 @@ public class OrderRepositoryImpl implements OrderRepository {
         productLineEntities.forEach(this::saveProductLine);
     }
 
-
+    /**
+     * Deletes an order from the database.
+     *
+     * @param order The order to delete.
+     */
     @Override
     public void delete(Order order) {
         entityManager.remove(orderMapper.mapToEntity(order));
     }
 
-
     private void saveProductLine(ProductLineEntity productLineEntity){
         entityManager.merge(productLineEntity);
     }
-
 }

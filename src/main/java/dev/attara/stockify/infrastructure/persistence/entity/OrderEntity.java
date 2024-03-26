@@ -20,7 +20,7 @@ public class OrderEntity {
     @JoinColumn(nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<ProductLineEntity> productLines;
 
 }

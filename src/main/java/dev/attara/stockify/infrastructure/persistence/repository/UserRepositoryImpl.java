@@ -14,6 +14,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Implementation of the UserRepository interface for accessing and managing UserEntity objects in the database.
+ */
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -21,10 +24,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final UserMapper mapper;
 
-
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Retrieves a user by their unique identifier.
+     *
+     * @param id The unique identifier of the user.
+     * @return The user with the specified ID.
+     * @throws UserNotFoundException If no user exists with the given ID.
+     */
     @Override
     public User findById(long id) throws UserNotFoundException {
         UserEntity user = entityManager.find(UserEntity.class, id);
@@ -34,6 +43,13 @@ public class UserRepositoryImpl implements UserRepository {
         return mapper.mapToDomain(user);
     }
 
+    /**
+     * Retrieves a user by their email address.
+     *
+     * @param email The email address of the user.
+     * @return The user with the specified email address.
+     * @throws UserNotFoundException If no user exists with the given email address.
+     */
     @Override
     public User findByEmail(String email) throws UserNotFoundException {
         try {
@@ -43,10 +59,16 @@ public class UserRepositoryImpl implements UserRepository {
                     .getSingleResult();
             return mapper.mapToDomain(userEntity);
         } catch (NoResultException e) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("User not found");
         }
     }
 
+    /**
+     * Checks if a user with the given email address exists in the database.
+     *
+     * @param email The email address to check.
+     * @return true if the user exists, false otherwise.
+     */
     @Override
     public boolean userEmailExists(String email) {
         try {
@@ -60,26 +82,44 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    /**
+     * Retrieves the total number of users in the database.
+     *
+     * @return The total number of users.
+     */
     @Override
     public long count() {
         return findAll().size();
     }
 
-
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return A list of all users.
+     */
     @Override
     public List<User> findAll() {
         List<UserEntity> userEntities = entityManager.createQuery("SELECT u FROM UserEntity u", UserEntity.class).getResultList();
         return userEntities.stream().map(mapper::mapToDomain).toList();
     }
 
+    /**
+     * Saves a user in the database.
+     *
+     * @param user The user to save.
+     */
     @Override
     public void save(User user) {
         entityManager.merge(mapper.mapToEntity(user));
     }
 
+    /**
+     * Deletes a user from the database.
+     *
+     * @param user The user to delete.
+     */
     @Override
     public void delete(User user) {
         entityManager.remove(mapper.mapToEntity(user));
     }
-
 }

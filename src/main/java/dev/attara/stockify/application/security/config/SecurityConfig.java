@@ -35,6 +35,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+/**
+ * Configuration class for Spring Security.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
@@ -43,6 +46,9 @@ public class SecurityConfig {
 
     private final RSAKeyProvider rsaKeyProvider;
 
+    /**
+     * Configures the security filter chain.
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -52,52 +58,75 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/graphiql/**"), antMatcher("/graphql/**")).permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        httpSecurity.oauth2ResourceServer((oauth) -> oauth.jwt(Customizer.withDefaults()));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
 
         return httpSecurity.build();
     }
 
+    /**
+     * Configures the password encoder.
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the user details service.
+     */
     @Bean
     UserDetailsService userDetailsService(UserRepository userRepository) {
         return new CustomUserDetailsService(userRepository);
     }
 
+    /**
+     * Configures the authentication manager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        var authenticationProvider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
 
+    /**
+     * Configures the JWT encoder.
+     */
     @Bean
     JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
         return new NimbusJwtEncoder(jwkSource);
     }
 
+    /**
+     * Configures the JWT token service.
+     */
     @Bean
     public JwtTokenService jwtTokenService(JwtEncoder jwtEncoder) {
         return new JwtTokenServiceImpl(jwtEncoder);
     }
 
+    /**
+     * Configures the JWK source.
+     */
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
         JWKSet jwkSet = new JWKSet(rsaKeyProvider.getRSAKey());
         return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
     }
 
+    /**
+     * Configures the JWT decoder.
+     */
     @Bean
     JwtDecoder jwtDecoder() throws JOSEException {
         return NimbusJwtDecoder.withPublicKey(rsaKeyProvider.getRSAKey().toRSAPublicKey()).build();
     }
 
+    /**
+     * Configures the JWT authentication converter.
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();

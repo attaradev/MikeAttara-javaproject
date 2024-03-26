@@ -1,17 +1,17 @@
 package dev.attara.stockify.domain.model;
 
 import dev.attara.stockify.domain.exception.InsufficientStockException;
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Product {
 
     private final long id;
-
     private String name;
-
     private int stock;
-
     private double price;
 
     private Product(long id, String name, int stock, double price) {
@@ -21,41 +21,44 @@ public class Product {
         this.price = price;
     }
 
-    public static Product create(long id, String name, double price, int stock) throws IllegalArgumentException {
-        if (id < 1) throw new IllegalArgumentException("invalid id");
-        return new Product(id, validateName(name), validateStock(stock), validatePrice(price));
+    /**
+     * Creates a new product.
+     *
+     * @param id    the ID of the product
+     * @param name  the name of the product
+     * @param price the price of the product
+     * @param stock the initial stock of the product
+     * @return the created product
+     * @throws IllegalArgumentException if the ID is invalid, name is null, price is negative, or stock is negative
+     */
+    public static Product create(long id, @NonNull String name, double price, int stock) throws IllegalArgumentException {
+        if (id < 1) throw new IllegalArgumentException("Invalid product ID");
+        return new Product(id, validateName(name), validateQuantity(stock), validatePrice(price));
     }
 
+    /**
+     * Decreases the stock of the product by the specified quantity.
+     *
+     * @param quantity the quantity to sell
+     * @throws InsufficientStockException if the quantity exceeds the available stock
+     */
     public void sell(int quantity) throws InsufficientStockException {
         if (stock < quantity) throw new InsufficientStockException(id);
         stock -= quantity;
     }
 
-    public void setName(String name){
-        this.name = validateName(name);
+    private static int validateQuantity(int quantity) throws IllegalArgumentException {
+        if (quantity < 0) throw new IllegalArgumentException("Stock cannot be negative");
+        return quantity;
     }
 
-    public void setPrice(double price) {
-        this.price = validatePrice(price);
-    }
-
-    public void setStock(int stock) {
-        this.stock = validateStock(stock);
-    }
-
-    private static int validateStock(int price) throws IllegalArgumentException {
-        if (price < 0) throw new IllegalArgumentException("stock cannot be negative");
-        return price;
-    }
-
-    private static String validateName(String name){
-        if (name == null) throw new IllegalArgumentException("name required");
+    private static String validateName(String name) {
+        if (name == null) throw new IllegalArgumentException("Name cannot be null");
         return name;
     }
 
     private static double validatePrice(double price) {
-        if (price < 0) throw new IllegalArgumentException("price cannot be negative");
+        if (price < 0) throw new IllegalArgumentException("Price cannot be negative");
         return price;
     }
-
 }
