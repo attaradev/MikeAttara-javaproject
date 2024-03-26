@@ -1,67 +1,67 @@
-# Stockify
+# Stockify: Simplifying Inventory Management
 
-Stockify is a Java Spring Boot application that provides a comprehensive solution for managing users, products, and orders. It includes authentication and authorization mechanisms, a GraphQL API, and business logic to manage low stock items. The development approach followed Domain-Driven Design (DDD) principles to organize and structure the codebase.
+Stockify is a robust Java Spring Boot application designed to streamline user, product, and order management. It incorporates advanced authentication and authorization mechanisms, a versatile GraphQL API, and intelligent business logic to handle low stock items effectively. Developed following the principles of Domain-Driven Design (DDD), Stockify ensures a well-structured and organized codebase.
 
 ## Developer
 - **Name:** Mike Attara
 
-## Features
+## Key Features
 
 ### Data Models
-- **User:** Represents a user with attributes `id`, `name`, `email`, `password`, and `role` (an enum of `USER` and `ADMIN`). NB: Cannot query for password for security.
-- **Product:** Represents a product with attributes `id`, `name`, `stock`, and `price`.
-- **Order:** Represents an order with attributes `id`, `products` (a list of `ProductLine`), and `user` (a `User`).
-- **ProductLine:** Represents a line item in an order with attributes `productId`, `quantity`, and `orderId`.
+- **User:** Represents a user with attributes such as `id`, `name`, `email`, `password`, and `role` (defined as an enum: `USER` or `ADMIN`). Note: Passwords are securely stored and cannot be queried for security reasons.
+- **Product:** Represents a product with attributes like `id`, `name`, `stock`, and `price`.
+- **Order:** Represents an order with attributes including `id`, `products` (a list of `ProductLine`), and `user` (a reference to a `User`).
+- **ProductLine:** Represents a line item in an order with details like `productId`, `quantity`, and `orderId`.
 
 ### Authentication and Authorization
-- Implemented authentication using Spring Security.
-- Secured the API endpoints to allow only authenticated users to perform actions except the login route.
-- Implemented authorization to restrict access to specific resources based on user role.
+- Implemented robust authentication using Spring Security.
+- API endpoints are secured to allow only authenticated users to perform actions, with the exception of the login route.
+- Authorization mechanisms are in place to restrict access to specific resources based on user roles.
 
-![Auth Screenshot](./screenshots/screenshot1.png)
+![Authentication Screenshot](./screenshots/screenshot1.png)
 ![Query Screenshot](./screenshots/screenshort2.png)
 
 ### GraphQL API
-- Implemented a GraphQL API with queries and mutations for users, products, and orders.
-  - Queries:
-    - Get all users.
-    - Get a specific user by ID.
-    - Get all products.
-    - Get a specific product by ID.
-    - Get all orders.
-    - Get a specific order by ID.
-    - Get all orders for a specific user.
-    - Get all products for a specific order.
-    - Get all products below a given threshold (default threshold is 1);
-  - Mutations:
-    - Create a new user (admin/user).
-    - Update a user.
-    - Delete a user.
-    - Create a new product.
-    - Update a product.
-    - Delete a product.
-    - Create a new order.
-    - Update an order.
-    - Delete an order.
+- Implemented a GraphQL API featuring queries and mutations for managing users, products, and orders.
+  - Queries include:
+    - Retrieving all users.
+    - Fetching a specific user by ID.
+    - Listing all products.
+    - Getting details of a specific product by ID.
+    - Accessing all orders.
+    - Retrieving a specific order by its ID.
+    - Finding all orders associated with a specific user.
+    - Fetching all products for a given order.
+    - Identifying products below a certain stock threshold (default threshold is 1).
+  - Mutations include:
+    - Creating a new user (admin/user).
+    - Updating user details.
+    - Deleting a user.
+    - Adding a new product.
+    - Updating product information.
+    - Removing a product.
+    - Placing a new order.
+    - Updating an existing order.
+    - Cancelling an order.
 
-### Other Features
-- Implemented business logic to identify and manage items with low stock.
+### Additional Features
+- Incorporated intelligent business logic to handle and manage items with low stock efficiently.
 
-## Technical Details
+## Technical Insights
 
 ### Development Approach
-- Followed Domain-Driven Design (DDD) principles to structure the codebase.
-- Organized code into `application`, `domain`, `infrastructure` and `interfaces` layers to maintain separation of concerns.
-- Utilized Maven for dependency management.
+- Adhered to Domain-Driven Design (DDD) principles for a well-organized codebase.
+- Employed a structured approach with layers including `application`, `domain`, `infrastructure`, and `interfaces` to maintain separation of concerns.
+- Maven was utilized for efficient dependency management.
 
 ### Docker Setup
-- Created a Docker image to facilitate easy deployment of the application.
+- Established a Docker image to simplify the deployment process.
 
-## Setup and Running the Application
+## Setting Up and Running the Application
 
 ### Prerequisites
-- JDK (Java Development Kit) installed on your machine: I used Version 17.
-- Docker installed on your machine
+- JDK (Java Development Kit) installed on your machine (Version 17 is recommended).
+- Docker installed on your machine.
 
 ### Steps
 
@@ -87,6 +87,11 @@ Stockify is a Java Spring Boot application that provides a comprehensive solutio
 
 5. Access the application at `http://localhost:8080`.
 
-## Contact
-For any inquiries or support regarding this project, please contact Mike Attara at [mike@attara.dev](mailto:mike@attara.dev).
-```
+## Default Users for Testing
+- Upon deployment, the system automatically creates two users: an admin and a normal user, facilitating easy testing.
+  - Admin Email: admin@test.com
+  - User Email: user@test.com
+  - Password for both: P@55w0rd
+
+## Contact Information
+For any inquiries or support regarding this project, please feel free to reach out to Mike Attara at [mike@attara.dev](mailto:mike@attara.dev).
