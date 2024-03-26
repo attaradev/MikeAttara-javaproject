@@ -12,8 +12,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "users")
 public class UserEntity {
+
     @Id
     private long id;
 
@@ -31,4 +31,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<OrderEntity> orders;
+
 }

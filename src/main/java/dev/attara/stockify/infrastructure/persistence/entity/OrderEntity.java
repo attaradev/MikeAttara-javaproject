@@ -11,15 +11,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders")
 public class OrderEntity {
+
     @Id
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
     private UserEntity user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductLineEntity> productLines;
+
 }

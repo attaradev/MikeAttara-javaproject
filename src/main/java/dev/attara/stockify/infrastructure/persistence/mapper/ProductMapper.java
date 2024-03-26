@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper {
 
-    public Product toModel(@NonNull ProductEntity entity) {
+    public Product mapToDomain(@NonNull ProductEntity entity) {
         return Product.create(
                 entity.getId(),
                 entity.getName(),
@@ -18,21 +18,21 @@ public class ProductMapper {
         );
     }
 
-    public ProductRecord toRecord(@NonNull Product model) {
+    public ProductRecord mapToRecord(@NonNull Product product) {
         return new ProductRecord(
-                model.getId(),
-                model.getName(),
-                model.getStock(),
-                model.getPrice()
+                product.getId(),
+                product.getName(),
+                product.getStock(),
+                product.getPrice()
         );
     }
 
-    public ProductEntity toEntity(@NonNull Product model) {
+    public ProductEntity mapToEntity(@NonNull Product product) {
         ProductEntity entity = new ProductEntity();
-        entity.setId(model.getId());
-        entity.setName(model.getName());
-        entity.setStock(model.getStock());
-        entity.setPrice(model.getPrice());
+        entity.setId(product.getId());
+        entity.setName(product.getName());
+        entity.setStock(product.getStock());
+        entity.setPrice(product.getPrice());
         return entity;
     }
 

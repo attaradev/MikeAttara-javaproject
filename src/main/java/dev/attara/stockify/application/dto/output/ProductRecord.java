@@ -2,7 +2,7 @@ package dev.attara.stockify.application.dto.output;
 
 public record ProductRecord(
 
-        Long id,
+        long id,
 
         String name,
 

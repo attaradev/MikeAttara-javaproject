@@ -4,10 +4,10 @@ import java.util.List;
 
 public record OrderRecord(
 
-        Long id,
+        long id,
 
-        List<ProductLineRecord> productLines,
+        UserRecord user,
 
-        UserRecord user
+        List<ProductLineRecord> productLines
 
 ) { }

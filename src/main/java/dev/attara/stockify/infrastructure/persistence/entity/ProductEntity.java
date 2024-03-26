@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "products")
 public class ProductEntity {
+
     @Id
     private long id;
 
@@ -22,4 +22,5 @@ public class ProductEntity {
 
     @Column(nullable = false)
     private double price;
+
 }

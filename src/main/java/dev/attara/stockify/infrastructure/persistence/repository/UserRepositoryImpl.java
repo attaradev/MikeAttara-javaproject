@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (user == null) {
             throw new UserNotFoundException(id);
         }
-        return mapper.toModel(user);
+        return mapper.mapToDomain(user);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
                             "SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class)
                     .setParameter("email", email)
                     .getSingleResult();
-            return mapper.toModel(userEntity);
+            return mapper.mapToDomain(userEntity);
         } catch (NoResultException e) {
             throw new UserNotFoundException();
         }
@@ -69,17 +69,17 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAll() {
         List<UserEntity> userEntities = entityManager.createQuery("SELECT u FROM UserEntity u", UserEntity.class).getResultList();
-        return userEntities.stream().map(mapper::toModel).toList();
+        return userEntities.stream().map(mapper::mapToDomain).toList();
     }
 
     @Override
     public void save(User user) {
-        entityManager.merge(mapper.toEntity(user));
+        entityManager.merge(mapper.mapToEntity(user));
     }
 
     @Override
     public void delete(User user) {
-        entityManager.remove(mapper.toEntity(user));
+        entityManager.remove(mapper.mapToEntity(user));
     }
 
 }

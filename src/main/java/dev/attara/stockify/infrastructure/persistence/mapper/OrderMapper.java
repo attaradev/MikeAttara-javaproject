@@ -1,11 +1,11 @@
 package dev.attara.stockify.infrastructure.persistence.mapper;
 
-import dev.attara.stockify.application.dto.input.ProductLineDTO;
 import dev.attara.stockify.application.dto.output.OrderRecord;
 import dev.attara.stockify.application.dto.output.ProductLineRecord;
 import dev.attara.stockify.domain.model.Order;
+import dev.attara.stockify.domain.model.ProductLine;
+import dev.attara.stockify.domain.model.User;
 import dev.attara.stockify.infrastructure.persistence.entity.OrderEntity;
-import dev.attara.stockify.infrastructure.persistence.entity.ProductLineEntity;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,41 +21,30 @@ public class OrderMapper {
 
     private final UserMapper userMapper;
 
-    public Order toModel(@NonNull OrderEntity entity) {
-        List<ProductLineDTO> productLines = entity.getProductLines().stream()
-                .map(this::convert)
-                .toList();
-        Order order = Order.create(
-                entity.getId(),
-                userMapper.toModel(entity.getUser())
-        );
-        order.addProducts(productLines);
-        return order;
+    public Order mapToDomain(@NonNull OrderEntity entity) {
+        List<ProductLine> productLines = entity.getProductLines().stream().map(productLineMapper::mapToDomain).toList();
+        User user = userMapper.mapToDomain(entity.getUser());
+        return Order.create(entity.getId(), user,productLines);
     }
 
-    public OrderRecord toRecord(@NonNull Order model) {
+    public OrderRecord mapToRecord(@NonNull Order model) {
         List<ProductLineRecord> productLineRecords = model.getProductLines().stream()
-                .map(productLineMapper::toRecord)
+                .map(productLineMapper::mapToRecord)
                 .collect(Collectors.toList());
         return new OrderRecord(
                 model.getId(),
-                productLineRecords,
-                userMapper.toRecord(model.getUser())
+                userMapper.mapToRecord(model.getUser()),
+                productLineRecords
         );
     }
 
-    public OrderEntity toEntity(@NonNull Order model) {
+    public OrderEntity mapToEntity(@NonNull Order order) {
         OrderEntity entity = new OrderEntity();
-        entity.setId(model.getId());
-        entity.setProductLines(model.getProductLines().stream()
-                .map(productLineMapper::toEntity)
-                .collect(Collectors.toList()));
-        entity.setUser(userMapper.toEntity(model.getUser()));
+        entity.setId(order.getId());
+        entity.setProductLines(order.getProductLines().stream()
+                .map(productLineMapper::mapToEntity)
+                .toList());
+        entity.setUser(userMapper.mapToEntity(order.getUser()));
         return entity;
     }
-
-    private ProductLineDTO convert(@NonNull ProductLineEntity p) {
-        return new ProductLineDTO(p.getProductId(), p.getQuantity());
-    }
-
 }

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,40 +21,42 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Override
-    public ProductRecord createProduct(CreateProductDTO createProductDTO) {
+    public ProductRecord createProduct(CreateProductDTO dto) {
         Product product = Product.create(
                 productRepository.nextId(),
-                createProductDTO.name(),
-                createProductDTO.price(),
-                createProductDTO.stock()
+                dto.name(),
+                dto.price(),
+                dto.stock()
         );
         productRepository.save(product);
-        return productMapper.toRecord(product);
+        return productMapper.mapToRecord(product);
     }
 
     @Override
-    public ProductRecord updateProduct(long productId, UpdateProductDTO updateProductDTO) {
+    public ProductRecord updateProduct(long productId, UpdateProductDTO dto) {
         Product product = productRepository.findById(productId);
-        String name = updateProductDTO.name();
-        double price = updateProductDTO.price();
-        int stock = updateProductDTO.stock();
+        String name = dto.name();
+        double price = dto.price();
+        int stock = dto.stock();
         product.setName(name);
         product.setPrice(price);
         product.setStock(stock);
         productRepository.save(product);
-        return productMapper.toRecord(product);
+        return productMapper.mapToRecord(product);
     }
 
     @Override
     public ProductRecord getProductById(long productId) {
         Product product = productRepository.findById(productId);
-        return productMapper.toRecord(product);
+        return productMapper.mapToRecord(product);
     }
 
     @Override
     public List<ProductRecord> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(productMapper::toRecord).collect(Collectors.toList());
+        return products.stream().
+                map(productMapper::mapToRecord)
+                .toList();
     }
 
     @Override
@@ -68,7 +69,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductRecord> getLowStockProducts(int threshold) {
         List<Product> products = productRepository.findLowStockProducts(threshold);
-        return products.stream().map(productMapper::toRecord).collect(Collectors.toList());
+        return products.stream()
+                .map(productMapper::mapToRecord)
+                .toList();
     }
 
 }

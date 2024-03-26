@@ -43,14 +43,14 @@ type Product {
 }
 
 type ProductLine {
-    product: [Product!]!
+    product: Product!
     quantity: Int!
 }
 
 type Order {
     id: ID!
     user: User!
-    productsLines: [ProductLine!]!
+    productLines: [ProductLine!]!
 }
 
 input UpdateProductInput {

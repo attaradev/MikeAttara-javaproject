@@ -2,13 +2,10 @@ package dev.attara.stockify.domain.model;
 
 import lombok.*;
 
-@Getter
-@AllArgsConstructor
+@Data
 public class ProductLine {
 
-    private final long orderId;
-
-    private final long productId;
+    private Product product;
 
     private int quantity;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public User toModel(@NonNull UserEntity entity) {
+    public User mapToDomain(@NonNull UserEntity entity) {
         return User.create(
                 entity.getId(),
                 entity.getEmail(),
@@ -19,7 +19,7 @@ public class UserMapper {
         );
     }
 
-    public UserRecord toRecord(@NonNull User model) {
+    public UserRecord mapToRecord(@NonNull User model) {
         return new UserRecord(
                 model.getId(),
                 model.getName(),
@@ -28,13 +28,13 @@ public class UserMapper {
         );
     }
 
-    public UserEntity toEntity(@NonNull User model) {
+    public UserEntity mapToEntity(@NonNull User user) {
         UserEntity entity = new UserEntity();
-        entity.setId(model.getId());
-        entity.setName(model.getName());
-        entity.setEmail(model.getEmail());
-        entity.setPassword(model.getPassword());
-        entity.setRole(model.getRole());
+        entity.setId(user.getId());
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        entity.setPassword(user.getPassword());
+        entity.setRole(user.getRole());
         return entity;
     }
 

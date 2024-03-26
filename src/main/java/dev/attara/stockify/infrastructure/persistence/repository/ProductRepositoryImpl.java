@@ -30,7 +30,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product findById(long id) throws ProductNotFoundException {
         try {
             ProductEntity productEntity = entityManager.find(ProductEntity.class, id);
-            return productMapper.toModel(productEntity);
+            return productMapper.mapToDomain(productEntity);
         } catch (Exception e) {
             throw new ProductNotFoundException(id);
         }
@@ -43,7 +43,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .setParameter("threshold", threshold)
                 .getResultList()
                 .stream()
-                .map(productMapper::toModel)
+                .map(productMapper::mapToDomain)
                 .collect(Collectors.toList());
     }
 
@@ -52,18 +52,18 @@ public class ProductRepositoryImpl implements ProductRepository {
         return entityManager.createQuery("SELECT p FROM ProductEntity p", ProductEntity.class)
                 .getResultList()
                 .stream()
-                .map(productMapper::toModel)
+                .map(productMapper::mapToDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void save(Product product) {
-        entityManager.merge(productMapper.toEntity(product));
+        entityManager.merge(productMapper.mapToEntity(product));
     }
 
     @Override
     public void delete(Product product) {
-        entityManager.remove(productMapper.toEntity(product));
+        entityManager.remove(productMapper.mapToEntity(product));
     }
 
 }

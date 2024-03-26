@@ -5,7 +5,7 @@ import dev.attara.stockify.domain.model.Role;
 
 public record UserRecord(
 
-        Long id,
+        long id,
 
         String name,
 
