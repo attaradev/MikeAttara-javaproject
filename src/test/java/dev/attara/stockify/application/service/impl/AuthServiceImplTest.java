@@ -37,10 +37,7 @@ class AuthServiceImplTest {
         String password = "password";
 
         when(authenticationManager.authenticate(any()))
-                .thenThrow(new AuthenticationException("Authentication failed") {
-                    // This is an anonymous subclass of AuthenticationException
-                    // You can override any necessary methods here
-                });
+                .thenThrow(new AuthenticationException("Authentication failed") {});
 
         assertThrows(AuthenticationException.class, () -> {
             authService.authenticate(email, password);
