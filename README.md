@@ -92,5 +92,32 @@ Stockify is a robust Java Spring Boot application designed to streamline user, p
   - User Email: user@test.com
   - Password for both: P@55w0rd
 
-## Contact Information
-For any inquiries or support regarding this project, please feel free to reach out to Mike Attara at [mike@attara.dev](mailto:mike@attara.dev).
+## Running Tests
+
+Stockify comes with a suite of tests to ensure robustness and reliability. Follow these steps to run the tests:
+
+### Prerequisites
+- Maven installed on your machine.
+- Docker installed on your machine (optional, if you prefer running tests within a container).
+
+### Steps
+
+1. Navigate to the project directory:
+   ```bash
+   cd MikeAttara-javaproject
+   ```
+
+2. Run the tests using Maven:
+   ```bash
+   mvn test
+   ```
+
+   This command will execute all the tests in the project.
+
+3. After running the tests, review the output to ensure all tests pass successfully.
+
+### Additional Notes
+- Ensure that all dependencies are resolved before running tests.
+- It's recommended to run tests regularly, especially after making changes to the codebase, to maintain code quality and reliability.
+
+By following these steps, you can verify the integrity of Stockify's codebase and ensure that it meets the required standards for functionality and performance. If you encounter any issues or have questions regarding testing, feel free to contact Mike Attara at [mike@attara.dev](mailto:mike@attara.dev).
