@@ -18,7 +18,8 @@ Stockify is a Java Spring Boot application that provides a comprehensive solutio
 - Secured the API endpoints to allow only authenticated users to perform certain actions.
 - Implemented authorization to restrict access to specific resources based on user roles or permissions.
 
-![Screenshot](Screenshot.png)
+![Auth Screenshot](./screenshots/screenshot1.png)
+![Query Screenshot](./screenshots/screenshort2.png)
 
 ### GraphQL API
 - Implemented a GraphQL API with queries and mutations for users, products, and orders.
