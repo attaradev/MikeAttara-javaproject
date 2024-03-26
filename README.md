@@ -28,7 +28,7 @@ Stockify is a robust Java Spring Boot application designed to streamline user, p
     - Fetching a specific user by ID.
     - Listing all products.
     - Getting details of a specific product by ID.
-    - Accessing all orders.
+    - Accessing all orders (users will see only their orders).
     - Retrieving a specific order by its ID.
     - Finding all orders associated with a specific user.
     - Fetching all products for a given order.
@@ -42,7 +42,6 @@ Stockify is a robust Java Spring Boot application designed to streamline user, p
     - Removing a product.
     - Placing a new order.
     - Updating an existing order.
-    - Cancelling an order.
 
 ### Additional Features
 - Incorporated intelligent business logic to handle and manage items with low stock efficiently.
