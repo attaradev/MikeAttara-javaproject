@@ -34,4 +34,4 @@ Dockerfile
 *.tar.gz
 
 # Database
-/database
+database/
