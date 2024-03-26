@@ -1,25 +1,25 @@
 type Query {
     users: [User!]!
-    user(id: ID!): User
+    user(userId: ID!): User
     products: [Product!]!
-    product(id: ID!): Product
+    product(productId: ID!): Product
     orders: [Order!]!
-    order(id: ID!): Order
+    order(orderId: ID!): Order
     ordersByUser(userId: ID!): [Order!]!
     productsInOrder(orderId: ID!): [ProductLine!]
     lowStockProducts(threshold: Int): [Product!]!
 }
 
 type Mutation {
-    createUser(user: CreateUserInput): User!
-    updateUser(id: ID!, data: UpdateUserInput!): User!
-    deleteUser(id: ID!): Boolean
-    createProduct(product: CreateProductInput!): Product!
-    updateProduct(id: ID!, data: UpdateProductInput): Product!
-    deleteProduct(id: ID!): Boolean
+    createUser(userData: CreateUserInput): User!
+    updateUser(userId: ID!, userData: UpdateUserInput!): User!
+    deleteUser(userId: ID!): Boolean
+    createProduct(productData: CreateProductInput!): Product!
+    updateProduct(productId: ID!, productData: UpdateProductInput!): Product!
+    deleteProduct(productId: ID!): Boolean
     createOrder(productLines: [ProductLineInput!]!): Order!
-    updateOrder(id: ID!, productLines: [ProductLineInput!]!): Order!
-    deleteOrder(id: ID!): Boolean
+    updateOrder(orderId: ID!, productLines: [ProductLineInput!]!): Order!
+    deleteOrder(orderId: ID!): Boolean
     accessToken(email: String!, password: String!): String
 }
 
@@ -64,7 +64,6 @@ input CreateProductInput {
     stock: Int!
     price: Float!
 }
-
 
 input CreateUserInput {
     email: String!

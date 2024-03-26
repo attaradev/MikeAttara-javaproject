@@ -23,20 +23,20 @@ public class ProductController {
 
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public ProductRecord createProduct(@Argument CreateProductDTO product) {
-        return productService.createProduct(product);
+    public ProductRecord createProduct(@Argument CreateProductDTO productData) {
+        return productService.createProduct(productData);
     }
 
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public ProductRecord updateProduct(@Argument long id, @Argument UpdateProductDTO data) {
-        return productService.updateProduct(id, data);
+    public ProductRecord updateProduct(@Argument long productId, @Argument UpdateProductDTO productData) {
+        return productService.updateProduct(productId, productData);
     }
 
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public boolean deleteProduct(@Argument long id) {
-        return productService.deleteProduct(id);
+    public boolean deleteProduct(@Argument long productId) {
+        return productService.deleteProduct(productId);
     }
 
     @QueryMapping
@@ -45,8 +45,8 @@ public class ProductController {
     }
 
     @QueryMapping
-    public ProductRecord product(@Argument long id) {
-        return productService.getProductById(id);
+    public ProductRecord product(@Argument long productId) {
+        return productService.getProductById(productId);
     }
 
     @QueryMapping

@@ -33,18 +33,18 @@ public class OrderController {
     }
 
     @MutationMapping
-    public OrderRecord updateOrder(@Argument long id, @Argument List<ProductLineDTO> productLines, Principal principal) {
-        return orderService.updateOrder(id, productLines, authenticatedUserProvider.user(principal));
+    public OrderRecord updateOrder(@Argument long orderId, @Argument List<ProductLineDTO> productLines, Principal principal) {
+        return orderService.updateOrder(orderId, productLines, authenticatedUserProvider.user(principal));
     }
 
     @MutationMapping
-    public boolean deleteOrder(@Argument long id, Principal principal) {
-        return orderService.deleteOrder(id, authenticatedUserProvider.user(principal));
+    public boolean deleteOrder(@Argument long orderId, Principal principal) {
+        return orderService.deleteOrder(orderId, authenticatedUserProvider.user(principal));
     }
 
     @QueryMapping
-    public OrderRecord order(@Argument long id, Principal principal) {
-        return orderService.getOrderById(id, authenticatedUserProvider.user(principal));
+    public OrderRecord order(@Argument long orderId, Principal principal) {
+        return orderService.getOrderById(orderId, authenticatedUserProvider.user(principal));
     }
 
     @QueryMapping

@@ -35,15 +35,15 @@ public class UserController {
 
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public boolean deleteUser(@Argument long id) {
-        return userService.deleteUser(id);
+    public boolean deleteUser(@Argument long userId) {
+        return userService.deleteUser(userId);
     }
 
     @MutationMapping
-    public UserRecord updateUser(@Argument long id, @Argument UpdateUserDTO data, Principal principal) {
+    public UserRecord updateUser(@Argument long userId, @Argument UpdateUserDTO userData, Principal principal) {
         User user = authenticatedUserProvider.user(principal);
-        selfOrAdminOnly(id, user);
-        return userService.updateUser(id, data);
+        selfOrAdminOnly(userId, user);
+        return userService.updateUser(userId, userData);
     }
 
     @QueryMapping
@@ -53,13 +53,13 @@ public class UserController {
     }
 
     @QueryMapping
-    public UserRecord user(@Argument long id, Principal principal) {
+    public UserRecord user(@Argument long userId, Principal principal) {
         User user = authenticatedUserProvider.user(principal);
-        selfOrAdminOnly(id, user);
-        return userService.getUserById(id);
+        selfOrAdminOnly(userId, user);
+        return userService.getUserById(userId);
     }
 
-    private void selfOrAdminOnly(long id, User user) {
-        if (user.isNotAdmin() && id != user.getId()) throw new NotAuthorizedException();
+    private void selfOrAdminOnly(long userId, User user) {
+        if (user.isNotAdmin() && userId != user.getId()) throw new NotAuthorizedException();
     }
 }
