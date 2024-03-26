@@ -35,3 +35,5 @@ Dockerfile
 
 # Database
 database/
+
+.DS_Store

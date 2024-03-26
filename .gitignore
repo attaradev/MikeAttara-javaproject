@@ -34,3 +34,5 @@ build/
 
 ### Database File ###
 database/
+
+.DS_Store

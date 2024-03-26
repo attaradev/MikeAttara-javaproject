@@ -15,8 +15,8 @@ Stockify is a Java Spring Boot application that provides a comprehensive solutio
 
 ### Authentication and Authorization
 - Implemented authentication using Spring Security.
-- Secured the API endpoints to allow only authenticated users to perform certain actions.
-- Implemented authorization to restrict access to specific resources based on user roles or permissions.
+- Secured the API endpoints to allow only authenticated users to perform actions except the login route.
+- Implemented authorization to restrict access to specific resources based on user role.
 
 ![Auth Screenshot](./screenshots/screenshot1.png)
 ![Query Screenshot](./screenshots/screenshort2.png)
@@ -60,7 +60,7 @@ Stockify is a Java Spring Boot application that provides a comprehensive solutio
 ## Setup and Running the Application
 
 ### Prerequisites
-- JDK (Java Development Kit) installed on your machine
+- JDK (Java Development Kit) installed on your machine: I used Version 17.
 - Docker installed on your machine
 
 ### Steps
