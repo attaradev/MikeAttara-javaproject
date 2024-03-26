@@ -32,3 +32,6 @@ Dockerfile
 *.log
 *.zip
 *.tar.gz
+
+# Database
+/database
