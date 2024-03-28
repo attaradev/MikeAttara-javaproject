@@ -14,18 +14,34 @@ public class ExceptionHandler {
 
     @GraphQlExceptionHandler({UserNotFoundException.class, ProductNotFoundException.class, OrderNotFoundException.class})
     public GraphQLError handleNotFoundExceptions(@NonNull RuntimeException exception) {
-        return GraphQLError.newError().errorType(ErrorType.NOT_FOUND)
-                .message(exception.getMessage()).build();
-    }
-    @GraphQlExceptionHandler({InsufficientStockException.class, UserExistsException.class ,IllegalArgumentException.class})
-    public GraphQLError handleBadRequest(@NonNull RuntimeException exception) {
-        return GraphQLError.newError().errorType(ErrorType.BAD_REQUEST)
-                .message(exception.getMessage()).build();
-    }
-    @GraphQlExceptionHandler({NotAuthorizedException.class, AuthenticationException.class})
-    public GraphQLError handleAuthorizationException (@NonNull AuthenticationException exception) {
-        return GraphQLError.newError().errorType(ErrorType.UNAUTHORIZED)
-                .message(exception.getMessage()).build();
+        return GraphQLError.newError()
+                .errorType(ErrorType.NOT_FOUND)
+                .message(exception.getMessage())
+                .build();
     }
 
+    @GraphQlExceptionHandler({InsufficientStockException.class, UserExistsException.class, IllegalArgumentException.class})
+    public GraphQLError handleBadRequest(@NonNull RuntimeException exception) {
+        return GraphQLError.newError()
+                .errorType(ErrorType.BAD_REQUEST)
+                .message(exception.getMessage())
+                .build();
+    }
+
+    @GraphQlExceptionHandler({NotAuthorizedException.class, AuthenticationException.class})
+    public GraphQLError handleAuthorizationException(@NonNull AuthenticationException exception) {
+        return GraphQLError.newError()
+                .errorType(ErrorType.UNAUTHORIZED)
+                .message(exception.getMessage())
+                .build();
+    }
+
+    // Exception handler for mutations
+    @GraphQlExceptionHandler
+    public GraphQLError handleMutationsExceptions(@NonNull Exception exception) {
+        return GraphQLError.newError()
+                .errorType(ErrorType.INTERNAL_ERROR)
+                .message(exception.getMessage())
+                .build();
+    }
 }

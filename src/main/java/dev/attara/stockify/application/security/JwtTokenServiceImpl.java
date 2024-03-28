@@ -14,7 +14,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-
+/**
+ * Implementation of the JwtTokenService interface for generating JWT tokens.
+ */
 @Service
 @RequiredArgsConstructor
 public class JwtTokenServiceImpl implements JwtTokenService {
@@ -43,5 +45,4 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
 }

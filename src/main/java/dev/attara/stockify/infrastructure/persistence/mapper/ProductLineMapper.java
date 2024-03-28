@@ -1,42 +1,54 @@
 package dev.attara.stockify.infrastructure.persistence.mapper;
 
-import dev.attara.stockify.application.dto.input.ProductLineDTO;
-import dev.attara.stockify.application.dto.output.ProductLineRecord;
+import dev.attara.stockify.application.dto.ProductLineRecord;
+import dev.attara.stockify.domain.mapper.Mapper;
 import dev.attara.stockify.domain.model.ProductLine;
-import dev.attara.stockify.domain.repository.ProductRepository;
 import dev.attara.stockify.infrastructure.persistence.entity.ProductLineEntity;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Mapper class responsible for mapping ProductLine objects between their domain representation, database entity, and DTO representation.
+ */
 @Component
 @RequiredArgsConstructor
-public class ProductLineMapper {
-
-    private final ProductRepository productRepository;
+public class ProductLineMapper implements Mapper<ProductLine, ProductLineRecord, ProductLineEntity> {
 
     private final ProductMapper productMapper;
 
-    public ProductLineRecord mapToRecord(@NonNull ProductLine productLine) {
+    /**
+     * Maps a ProductLine domain model object to its corresponding DTO representation.
+     *
+     * @param productLine The ProductLine domain model object to map.
+     * @return The mapped ProductLineRecord DTO object.
+     */
+    public ProductLineRecord mapToRecord(ProductLine productLine) {
         return new ProductLineRecord(
                 productMapper.mapToRecord(productLine.getProduct()),
                 productLine.getQuantity()
         );
     }
 
-    public ProductLine mapToDomain(ProductLineDTO dto) {
-        return ProductLine.create(productRepository.findById(dto.productId()), dto.quantity());
-    }
-
+    /**
+     * Maps a ProductLineEntity object from the database to its corresponding domain model representation.
+     *
+     * @param entity The ProductLineEntity object to map.
+     * @return The mapped ProductLine domain model object.
+     */
     public ProductLine mapToDomain(ProductLineEntity entity) {
-        return ProductLine.create(productMapper.mapToDomain(entity.getProduct()),entity.getQuantity());
+        return ProductLine.create(productMapper.mapToDomain(entity.getProduct()), entity.getQuantity());
     }
 
+    /**
+     * Maps a ProductLine domain model object to its corresponding database entity representation.
+     *
+     * @param productLine The ProductLine domain model object to map.
+     * @return The mapped ProductLineEntity database entity object.
+     */
     public ProductLineEntity mapToEntity(ProductLine productLine) {
         ProductLineEntity productLineEntity = new ProductLineEntity();
         productLineEntity.setProduct(productMapper.mapToEntity(productLine.getProduct()));
         productLineEntity.setQuantity(productLine.getQuantity());
         return productLineEntity;
     }
-
 }

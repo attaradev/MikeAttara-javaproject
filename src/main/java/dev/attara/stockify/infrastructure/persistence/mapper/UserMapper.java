@@ -1,15 +1,24 @@
 package dev.attara.stockify.infrastructure.persistence.mapper;
 
-import dev.attara.stockify.application.dto.output.UserRecord;
+import dev.attara.stockify.application.dto.UserRecord;
+import dev.attara.stockify.domain.mapper.Mapper;
 import dev.attara.stockify.domain.model.User;
 import dev.attara.stockify.infrastructure.persistence.entity.UserEntity;
-import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
+/**
+ * Mapper class responsible for mapping User objects between their domain representation, database entity, and DTO representation.
+ */
 @Component
-public class UserMapper {
+public class UserMapper implements Mapper<User, UserRecord, UserEntity> {
 
-    public User mapToDomain(@NonNull UserEntity entity) {
+    /**
+     * Maps a UserEntity object from the database to its corresponding domain model representation.
+     *
+     * @param entity The UserEntity object to map.
+     * @return The mapped User domain model object.
+     */
+    public User mapToDomain(UserEntity entity) {
         return User.create(
                 entity.getId(),
                 entity.getEmail(),
@@ -19,7 +28,13 @@ public class UserMapper {
         );
     }
 
-    public UserRecord mapToRecord(@NonNull User model) {
+    /**
+     * Maps a User domain model object to its corresponding DTO representation.
+     *
+     * @param model The User domain model object to map.
+     * @return The mapped UserRecord DTO object.
+     */
+    public UserRecord mapToRecord(User model) {
         return new UserRecord(
                 model.getId(),
                 model.getName(),
@@ -28,7 +43,13 @@ public class UserMapper {
         );
     }
 
-    public UserEntity mapToEntity(@NonNull User user) {
+    /**
+     * Maps a User domain model object to its corresponding database entity representation.
+     *
+     * @param user The User domain model object to map.
+     * @return The mapped UserEntity database entity object.
+     */
+    public UserEntity mapToEntity(User user) {
         UserEntity entity = new UserEntity();
         entity.setId(user.getId());
         entity.setName(user.getName());
