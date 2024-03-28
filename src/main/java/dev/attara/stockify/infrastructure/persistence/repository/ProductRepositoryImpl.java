@@ -5,12 +5,12 @@ import dev.attara.stockify.domain.model.Product;
 import dev.attara.stockify.domain.repository.ProductRepository;
 import dev.attara.stockify.infrastructure.persistence.entity.ProductEntity;
 import dev.attara.stockify.infrastructure.persistence.mapper.ProductMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,6 +85,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void save(Product product) {
         entityManager.merge(productMapper.mapToEntity(product));
+        entityManager.flush();
     }
 
     /**
@@ -94,7 +95,8 @@ public class ProductRepositoryImpl implements ProductRepository {
      */
     @Override
     public void delete(Product product) {
-        entityManager.remove(productMapper.mapToEntity(product));
+        ProductEntity managedProduct = entityManager.find(ProductEntity.class, product.getId());
+        entityManager.remove(managedProduct);
     }
 
 }

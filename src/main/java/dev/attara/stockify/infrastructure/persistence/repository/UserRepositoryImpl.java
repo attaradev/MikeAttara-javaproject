@@ -111,6 +111,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void save(User user) {
         entityManager.merge(mapper.mapToEntity(user));
+        entityManager.flush();
     }
 
     /**
@@ -120,6 +121,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public void delete(User user) {
-        entityManager.remove(mapper.mapToEntity(user));
+        UserEntity managedUser = entityManager.find(UserEntity.class, user.getId());
+        entityManager.remove(managedUser);
     }
 }

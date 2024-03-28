@@ -100,6 +100,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             return productLineEntity;
         }).toList();
         productLineEntities.forEach(this::saveProductLine);
+        entityManager.flush();
     }
 
     /**
@@ -109,7 +110,8 @@ public class OrderRepositoryImpl implements OrderRepository {
      */
     @Override
     public void delete(Order order) {
-        entityManager.remove(orderMapper.mapToEntity(order));
+        OrderEntity managedOrder = entityManager.find(OrderEntity.class, order.getId());
+        entityManager.remove(managedOrder);
     }
 
     private void saveProductLine(ProductLineEntity productLineEntity){

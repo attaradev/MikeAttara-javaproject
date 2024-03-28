@@ -1,27 +1,27 @@
 type Query {
-    users: [User!]!
+    users: [User!]
     user(userId: ID!): User
-    products: [Product!]!
+    products: [Product!]
     product(productId: ID!): Product
-    orders: [Order!]!
+    orders: [Order!]
     order(orderId: ID!): Order
-    ordersByUser(userId: ID!): [Order!]!
+    ordersByUser(userId: ID!): [Order!]
     productsInOrder(orderId: ID!): [ProductLine!]
-    lowStockProducts(threshold: Int): [Product!]!
+    lowStockProducts(threshold: Int): [Product!]
 }
 
 type Mutation {
-    createUser(userData: CreateUserInput): User!
-    updatePassword(userId: ID!, newPassword: String!): User!
-    updateName(userId: ID!, newName: String!): User!
-    updateEmail(userId: ID!, newEmail: String!): User!
-    updateRole(userId: ID!, newRole: Role!): User!
+    createUser(userData: CreateUserInput): User
+    updatePassword(userId: ID!, newPassword: String!): User
+    updateName(userId: ID!, newName: String!): User
+    updateEmail(userId: ID!, newEmail: String!): User
+    updateRole(userId: ID!, newRole: Role!): User
     deleteUser(userId: ID!): Boolean
-    createProduct(productData: CreateProductInput!): Product!
-    updateProduct(productId: ID!, productData: UpdateProductInput!): Product!
+    createProduct(productData: CreateProductInput!): Product
+    updateProduct(productId: ID!, productData: UpdateProductInput!): Product
     deleteProduct(productId: ID!): Boolean
-    createOrder(productLines: [ProductLineInput!]!): Order!
-    updateOrder(orderId: ID!, productLines: [ProductLineInput!]!): Order!
+    createOrder(productLines: [ProductLineInput!]!): Order
+    updateOrder(orderId: ID!, productLines: [ProductLineInput!]!): Order
     deleteOrder(orderId: ID!): Boolean
     accessToken(email: String!, password: String!): String
 }

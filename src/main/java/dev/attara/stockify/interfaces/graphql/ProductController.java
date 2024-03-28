@@ -3,6 +3,8 @@ package dev.attara.stockify.interfaces.graphql;
 import dev.attara.stockify.application.dto.ProductRecord;
 import dev.attara.stockify.application.service.productmanagement.addproduct.AddProduct;
 import dev.attara.stockify.application.service.productmanagement.addproduct.AddProductHandler;
+import dev.attara.stockify.application.service.productmanagement.deleteproduct.DeleteProduct;
+import dev.attara.stockify.application.service.productmanagement.deleteproduct.DeleteProductHandler;
 import dev.attara.stockify.application.service.productmanagement.getallproducts.GetAllProducts;
 import dev.attara.stockify.application.service.productmanagement.getallproducts.GetAllProductsHandler;
 import dev.attara.stockify.application.service.productmanagement.getlowstockproducts.GetLowStockProducts;
@@ -12,8 +14,6 @@ import dev.attara.stockify.application.service.productmanagement.getproduct.GetP
 import dev.attara.stockify.application.service.productmanagement.updateproduct.ProductUpdateData;
 import dev.attara.stockify.application.service.productmanagement.updateproduct.UpdateProduct;
 import dev.attara.stockify.application.service.productmanagement.updateproduct.UpdateProductHandler;
-import dev.attara.stockify.application.service.usermanagement.deleteuser.DeleteUser;
-import dev.attara.stockify.application.service.usermanagement.deleteuser.DeleteUserHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class ProductController {
 
     private final UpdateProductHandler updateProductHandler;
 
-    private final DeleteUserHandler deleteUserHandler;
+    private final DeleteProductHandler deleteProductHandler;
 
     private final GetAllProductsHandler getAllProductsHandler;
 
@@ -67,7 +67,7 @@ public class ProductController {
     @Secured("ROLE_ADMIN")
     public boolean deleteProduct(@Argument long productId) {
         logger.info("Deleting product with ID: {}", productId);
-        boolean deleted = deleteUserHandler.handle(new DeleteUser(productId));
+        boolean deleted = deleteProductHandler.handle(new DeleteProduct(productId));
         if (deleted) {
             logger.info("Product deleted successfully with ID: {}", productId);
         } else {
