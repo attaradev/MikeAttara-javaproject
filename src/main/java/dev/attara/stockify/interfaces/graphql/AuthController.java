@@ -1,7 +1,7 @@
 package dev.attara.stockify.interfaces.graphql;
 
-import dev.attara.stockify.application.service.authentication.Authentication;
-import dev.attara.stockify.application.service.authentication.AuthenticationHandler;
+import dev.attara.stockify.application.services.authentication.Authentication;
+import dev.attara.stockify.application.services.authentication.AuthenticationHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

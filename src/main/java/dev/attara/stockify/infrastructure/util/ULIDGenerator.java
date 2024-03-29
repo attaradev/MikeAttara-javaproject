@@ -1,7 +1,7 @@
 package dev.attara.stockify.infrastructure.util;
 
 import de.huxhorn.sulky.ulid.ULID;
-import dev.attara.stockify.application.util.IDGenerator;
+import dev.attara.stockify.domain.services.OrderManager;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * that generates unique identifiers using ULID (Universally Unique Lexicographically Sortable Identifier).
  */
 @Component
-public class ULIDGenerator implements IDGenerator {
+public class ULIDGenerator implements OrderManager.IDGenerator {
 
     private final ULID ulidGenerator = new ULID();
 
