@@ -17,7 +17,7 @@ public interface ProductRepository extends BaseRepository<Product> {
      * @return the found product
      * @throws ProductNotFoundException if the product with the given ID is not found
      */
-    Product findById(long id) throws ProductNotFoundException;
+    Product findById(String id) throws ProductNotFoundException;
 
     /**
      * Finds and returns all products with stock below the specified threshold.

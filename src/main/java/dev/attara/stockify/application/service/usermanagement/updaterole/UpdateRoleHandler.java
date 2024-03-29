@@ -35,7 +35,7 @@ public class UpdateRoleHandler implements ServiceHandler<UpdateRole, UserRecord>
     public UserRecord handle(UpdateRole updateRole) throws Exception {
         try {
             validator.validate(updateRole);
-            long id = updateRole.id();
+            String id = updateRole.id();
             Role newRole = updateRole.newRole();
             User user = repository.findById(id);
             logger.info("Updating role for user with ID: {} to {}", id, newRole);

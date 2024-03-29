@@ -10,7 +10,7 @@ public class OrderNotFoundException extends RuntimeException {
      *
      * @param orderId the ID of the order that was not found
      */
-    public OrderNotFoundException(long orderId) {
+    public OrderNotFoundException(String orderId) {
         super("Order not found with ID: " + orderId);
     }
 

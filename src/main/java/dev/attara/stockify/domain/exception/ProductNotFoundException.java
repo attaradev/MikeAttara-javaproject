@@ -1,12 +1,17 @@
 package dev.attara.stockify.domain.exception;
 
+/**
+ * Custom exception class to represent the scenario where a product is not found.
+ */
 public class ProductNotFoundException extends RuntimeException {
 
-    public ProductNotFoundException(long productId) {
+    /**
+     * Constructor that takes the product ID as a parameter and constructs an error message.
+     *
+     * @param productId The ID of the product that was not found.
+     */
+    public ProductNotFoundException(String productId) {
         super("Product not found with ID: " + productId);
     }
 
-    public ProductNotFoundException() {
-        super("Product not found");
-    }
 }

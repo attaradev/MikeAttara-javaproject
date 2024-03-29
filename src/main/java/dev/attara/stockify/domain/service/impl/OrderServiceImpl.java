@@ -1,6 +1,7 @@
 package dev.attara.stockify.domain.service.impl;
 
 import dev.attara.stockify.application.service.ordermanagement.createorder.ProductLineData;
+import dev.attara.stockify.application.util.IDGenerator;
 import dev.attara.stockify.domain.model.Order;
 import dev.attara.stockify.domain.model.Product;
 import dev.attara.stockify.domain.model.ProductLine;
@@ -24,7 +25,10 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+
     private final ProductRepository productRepository;
+
+    private final IDGenerator idGenerator;
 
     /**
      * Creates a new order with the given list of product lines for the specified user.
@@ -37,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order createOrder(List<ProductLine> productLines, User user) {
-        Order order = Order.create(orderRepository.nextId(), user, productLines);
+        Order order = Order.create(idGenerator.generateID(), user, productLines);
         validateAndProcessProductLines(productLines);
         orderRepository.save(order);
         return order;
@@ -53,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional
-    public Order updateOrder(long orderId, List<ProductLine> productLines) {
+    public Order updateOrder(String orderId, List<ProductLine> productLines) {
         Order order = orderRepository.findById(orderId);
         validateAndProcessProductLines(productLines);
         productLines.forEach(order::addProductLine);

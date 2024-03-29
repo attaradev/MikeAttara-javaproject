@@ -104,7 +104,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>de.huxhorn.sulky</groupId>
+			<artifactId>de.huxhorn.sulky.ulid</artifactId>
+			<version>8.3.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

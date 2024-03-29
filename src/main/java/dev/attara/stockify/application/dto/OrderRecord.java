@@ -6,7 +6,7 @@ import java.util.List;
  * A record representing an order, including its ID, associated user, and product lines.
  */
 public record OrderRecord(
-        long id,
+        String id,
 
         UserRecord user,
 

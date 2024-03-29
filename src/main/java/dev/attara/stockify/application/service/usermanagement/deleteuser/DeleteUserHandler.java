@@ -25,8 +25,7 @@ public class DeleteUserHandler implements ServiceHandler<DeleteUser, Boolean> {
     @Override
     @Transactional
     public Boolean handle(DeleteUser deleteUser) {
-        long id = deleteUser.id();
-        User user = repository.findById(id);
+        User user = repository.findById(deleteUser.id());
         if (user != null) {
             repository.delete(user);
             return true;

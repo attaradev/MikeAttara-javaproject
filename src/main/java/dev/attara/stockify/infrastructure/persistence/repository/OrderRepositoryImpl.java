@@ -42,7 +42,7 @@ public class OrderRepositoryImpl implements OrderRepository {
      * @throws OrderNotFoundException If no order exists with the given ID.
      */
     @Override
-    public Order findById(long id) throws OrderNotFoundException {
+    public Order findById(String id) throws OrderNotFoundException {
         OrderEntity orderEntity = entityManager.find(OrderEntity.class, id);
         if (orderEntity == null) {
             throw new OrderNotFoundException(id);
@@ -71,7 +71,7 @@ public class OrderRepositoryImpl implements OrderRepository {
      * @return A list of orders associated with the user.
      */
     @Override
-    public List<Order> findByUserId(long userId) {
+    public List<Order> findByUserId(String userId) {
         return entityManager.createQuery(
                         "SELECT o FROM OrderEntity o WHERE o.user.id = :userId", OrderEntity.class)
                 .setParameter("userId", userId)

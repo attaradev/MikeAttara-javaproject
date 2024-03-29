@@ -28,7 +28,7 @@ public class UpdateEmailHandler implements ServiceHandler<UpdateEmail, UserRecor
      */
     @Override
     public UserRecord handle(UpdateEmail updateEmail) {
-        long userId = updateEmail.userId();
+        String userId = updateEmail.userId();
         String newEmail = updateEmail.email();
 
         if (repository.userEmailExists(newEmail)) {

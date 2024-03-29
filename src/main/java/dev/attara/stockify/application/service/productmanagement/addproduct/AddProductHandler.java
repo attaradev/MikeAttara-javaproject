@@ -2,6 +2,7 @@ package dev.attara.stockify.application.service.productmanagement.addproduct;
 
 import dev.attara.stockify.application.dto.ProductRecord;
 import dev.attara.stockify.application.service.ServiceHandler;
+import dev.attara.stockify.application.util.IDGenerator;
 import dev.attara.stockify.domain.model.Product;
 import dev.attara.stockify.domain.repository.ProductRepository;
 import dev.attara.stockify.infrastructure.persistence.mapper.ProductMapper;
@@ -16,8 +17,12 @@ import org.springframework.stereotype.Service;
 public class AddProductHandler implements ServiceHandler<AddProduct, ProductRecord> {
 
     private final AddProductValidator validator;
+
     private final ProductRepository repository;
+
     private final ProductMapper mapper;
+
+    private final IDGenerator idGenerator;
 
     /**
      * Handles the request to add a new product.
@@ -28,7 +33,7 @@ public class AddProductHandler implements ServiceHandler<AddProduct, ProductReco
     @Override
     public ProductRecord handle(AddProduct addProduct) {
         validator.validate(addProduct);
-        long id = repository.nextId();
+        String id = idGenerator.generateID();
         String name = addProduct.name();
         double price = addProduct.price();
         int stock = addProduct.stock();

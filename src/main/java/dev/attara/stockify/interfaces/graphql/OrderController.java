@@ -20,6 +20,7 @@ import dev.attara.stockify.application.service.ordermanagement.updateorder.Updat
 import dev.attara.stockify.application.service.ordermanagement.updateorder.UpdateOrderHandler;
 import dev.attara.stockify.domain.exception.NotAuthorizedException;
 import dev.attara.stockify.domain.model.User;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,10 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Controller responsible for handling GraphQL queries and mutations related to orders.
+ * This controller manages operations such as creating, updating, deleting, and retrieving orders and order-related data.
+ */
 @Controller
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
@@ -55,6 +60,13 @@ public class OrderController {
 
     private final GetOrderProductsHandler getOrderProductsHandler;
 
+    /**
+     * Creates a new order.
+     *
+     * @param productLines The list of product lines in the order.
+     * @param principal    The principal object representing the authenticated user.
+     * @return The order record representing the created order.
+     */
     @MutationMapping
     public OrderRecord createOrder(@Argument List<ProductLineData> productLines, Principal principal) {
         try {
@@ -65,8 +77,16 @@ public class OrderController {
         }
     }
 
+    /**
+     * Updates an existing order.
+     *
+     * @param orderId      The ID of the order to update.
+     * @param productLines The updated list of product lines in the order.
+     * @param principal    The principal object representing the authenticated user.
+     * @return The order record representing the updated order.
+     */
     @MutationMapping
-    public OrderRecord updateOrder(@Argument long orderId, @Argument List<ProductLineData> productLines, Principal principal) {
+    public OrderRecord updateOrder(@Argument @NonNull String orderId, @Argument List<ProductLineData> productLines, Principal principal) {
         try {
             return updateOrderHandler.handle(new UpdateOrder(orderId, productLines, userProvider.get(principal)));
         } catch (Exception e) {
@@ -75,8 +95,15 @@ public class OrderController {
         }
     }
 
+    /**
+     * Deletes an existing order.
+     *
+     * @param orderId   The ID of the order to delete.
+     * @param principal The principal object representing the authenticated user.
+     * @return true if the order was successfully deleted, false otherwise.
+     */
     @MutationMapping
-    public boolean deleteOrder(@Argument long orderId, Principal principal) {
+    public boolean deleteOrder(@Argument @NonNull String orderId, Principal principal) {
         try {
             return deleteOrderHandler.handle(new DeleteOrder(orderId, userProvider.get(principal)));
         } catch (Exception e) {
@@ -85,8 +112,15 @@ public class OrderController {
         }
     }
 
+    /**
+     * Retrieves details of a specific order.
+     *
+     * @param orderId   The ID of the order to retrieve.
+     * @param principal The principal object representing the authenticated user.
+     * @return The order record representing the retrieved order.
+     */
     @QueryMapping
-    public OrderRecord order(@Argument long orderId, Principal principal) {
+    public OrderRecord order(@Argument @NonNull String orderId, Principal principal) {
         try {
             return getOrderHandler.handle(new GetOrder(orderId, userProvider.get(principal)));
         } catch (Exception e) {
@@ -95,6 +129,12 @@ public class OrderController {
         }
     }
 
+    /**
+     * Retrieves all orders.
+     *
+     * @param principal The principal object representing the authenticated user.
+     * @return The list of order records representing all orders.
+     */
     @QueryMapping
     public List<OrderRecord> orders(Principal principal) {
         try {
@@ -109,11 +149,18 @@ public class OrderController {
         }
     }
 
+    /**
+     * Retrieves orders associated with a specific user.
+     *
+     * @param userId    The ID of the user whose orders are to be retrieved.
+     * @param principal The principal object representing the authenticated user.
+     * @return The list of order records representing orders associated with the specified user.
+     */
     @QueryMapping
-    public List<OrderRecord> ordersByUser(@Argument long userId, Principal principal) {
+    public List<OrderRecord> ordersByUser(@Argument @NonNull String userId, Principal principal) {
         try {
             User user = userProvider.get(principal);
-            if (user.isNotAdmin() && user.getId() != userId) throw new NotAuthorizedException();
+            if (user.isNotAdmin() && user.getId().equals(userId)) throw new NotAuthorizedException();
             return getOrdersByUserHandler.handle(new GetOrdersByUser(userId));
         } catch (Exception e) {
             logger.error("Error occurred while fetching orders by user: {}", e.getMessage(), e);
@@ -121,8 +168,15 @@ public class OrderController {
         }
     }
 
+    /**
+     * Retrieves products associated with a specific order.
+     *
+     * @param orderId   The ID of the order whose products are to be retrieved.
+     * @param principal The principal object representing the authenticated user.
+     * @return The list of product line records representing products associated with the specified order.
+     */
     @QueryMapping
-    public List<ProductLineRecord> productsInOrder(@Argument long orderId, Principal principal) {
+    public List<ProductLineRecord> productsInOrder(@Argument @NonNull String orderId, Principal principal) {
         try {
             return getOrderProductsHandler.handle(new GetOrderProducts(orderId, userProvider.get(principal)));
         } catch (Exception e) {

@@ -20,6 +20,9 @@ public class UpdateOrderValidator implements ServiceValidator<UpdateOrder> {
      */
     @Override
     public void validate(UpdateOrder updateOrder) throws IllegalArgumentException {
+        if (updateOrder.orderId()==null) {
+            throw new IllegalArgumentException("orderId required");
+        }
         if (updateOrder.productLines().isEmpty()) {
             throw new IllegalArgumentException("Product lines are required to update the order");
         }
