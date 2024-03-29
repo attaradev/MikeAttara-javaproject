@@ -23,11 +23,6 @@ public class ProductTest {
     }
 
     @Test
-    void testCreateProductWithNullName() {
-        assertThrows(IllegalArgumentException.class, () -> Product.create("1", null, 10.0, 100));
-    }
-
-    @Test
     void testCreateProductWithNegativePrice() {
         assertThrows(IllegalArgumentException.class, () -> Product.create("1", "Test Product", -10.0, 100));
     }

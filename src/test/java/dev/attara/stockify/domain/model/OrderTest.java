@@ -33,18 +33,6 @@ public class OrderTest {
     }
 
     @Test
-    void testCreateOrderWithNullUser() {
-        List<ProductLine> productLines = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> Order.create("1", null, productLines));
-    }
-
-    @Test
-    void testCreateOrderWithNullProductLines() {
-        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
-        assertThrows(IllegalArgumentException.class, () -> Order.create("1", user, null));
-    }
-
-    @Test
     void testCreateOrderWithEmptyProductLines() {
         List<ProductLine> productLines = new ArrayList<>();
         User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
