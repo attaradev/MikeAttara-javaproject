@@ -28,7 +28,7 @@ public class UpdateNameHandler implements ServiceHandler<UpdateName, UserRecord>
     @Override
     public UserRecord handle(UpdateName updateName) {
         validator.validate(updateName);
-        long id = updateName.id();
+        String id = updateName.id();
         String newName = updateName.newName();
         User user = repository.findById(id);
         user.setName(newName);

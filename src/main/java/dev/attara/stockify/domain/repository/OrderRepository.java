@@ -17,7 +17,7 @@ public interface OrderRepository extends BaseRepository<Order> {
      * @return the found order
      * @throws OrderNotFoundException if the order with the given ID is not found
      */
-    Order findById(long id) throws OrderNotFoundException;
+    Order findById(String id) throws OrderNotFoundException;
 
     /**
      * Finds and returns all orders associated with the given user ID.
@@ -25,5 +25,5 @@ public interface OrderRepository extends BaseRepository<Order> {
      * @param userId the ID of the user
      * @return a list of orders associated with the user
      */
-    List<Order> findByUserId(long userId);
+    List<Order> findByUserId(String userId);
 }

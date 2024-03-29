@@ -35,7 +35,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @throws UserNotFoundException If no user exists with the given ID.
      */
     @Override
-    public User findById(long id) throws UserNotFoundException {
+    public User findById(String id) throws UserNotFoundException {
         UserEntity user = entityManager.find(UserEntity.class, id);
         if (user == null) {
             throw new UserNotFoundException(id);

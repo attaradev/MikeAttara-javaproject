@@ -10,7 +10,7 @@ public class InsufficientStockException extends RuntimeException {
      *
      * @param productId the ID of the product for which the stock is insufficient
      */
-    public InsufficientStockException(long productId) {
+    public InsufficientStockException(String productId) {
         super("Insufficient stock available for Product ID: " + productId);
     }
 

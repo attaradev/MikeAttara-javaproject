@@ -8,5 +8,5 @@ import java.util.List;
 /**
  * A record representing a request to update an order with new product lines.
  */
-public record UpdateOrder(long orderId, List<ProductLineData> productLines, User user) {
+public record UpdateOrder(String orderId, List<ProductLineData> productLines, User user) {
 }

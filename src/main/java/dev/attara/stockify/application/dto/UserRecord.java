@@ -6,7 +6,7 @@ import dev.attara.stockify.domain.model.Role;
  * A record representing a user, including their ID, name, email, and role.
  */
 public record UserRecord(
-        long id,
+        String id,
 
         String name,
 

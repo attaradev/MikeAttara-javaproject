@@ -34,7 +34,7 @@ public class UpdateOrderHandler implements ServiceHandler<UpdateOrder, OrderReco
     @Override
     public OrderRecord handle(UpdateOrder updateOrder) throws IllegalArgumentException {
         validator.validate(updateOrder);
-        long orderId = updateOrder.orderId();
+        String orderId = updateOrder.orderId();
         List<ProductLine> productLines = updateOrder.productLines().stream()
                 .map(orderService::createProductLine)
                 .toList();

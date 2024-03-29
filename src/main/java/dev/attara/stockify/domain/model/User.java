@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 public class User {
 
-    private final long id;
+    private final String id;
 
     @NonNull
     private String email;
@@ -18,7 +18,7 @@ public class User {
 
     private Role role;
 
-    private User(long id, @NonNull String email, @NonNull String password, String name, Role role) {
+    private User(String id, @NonNull String email, @NonNull String password, String name, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -37,8 +37,8 @@ public class User {
      * @return the created user
      * @throws IllegalArgumentException if the ID is invalid, email or password is null
      */
-    public static User create(long id, @NonNull String email, @NonNull String password, String name, Role role) {
-        if (id < 1) throw new IllegalArgumentException("ID must be greater than 0");
+    public static User create(String id, @NonNull String email, @NonNull String password, String name, Role role) {
+        if (id == null) throw new IllegalArgumentException("ID must be greater than 0");
         if (email.isBlank()) throw new IllegalArgumentException("Email cannot be blank");
         if (password.isBlank()) throw new IllegalArgumentException("Password cannot be blank");
         return new User(id, email, password, name, role);
@@ -64,16 +64,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return id == user.id;
+        return id.equals(user.id);
     }
 
-    /**
-     * Returns the hash code value for this user.
-     *
-     * @return the hash code value for this user
-     */
-    @Override
-    public int hashCode() {
-        return Long.hashCode(id);
-    }
 }

@@ -15,7 +15,7 @@ public interface UserRepository extends BaseRepository<User> {
      * @return the found user
      * @throws UserNotFoundException if the user with the given ID is not found
      */
-    User findById(long id) throws UserNotFoundException;
+    User findById(String id) throws UserNotFoundException;
 
     /**
      * Finds and returns a user by their email address.

@@ -13,14 +13,14 @@ public class OrderTest {
     @Test
     void testCreateOrder() {
         List<ProductLine> productLines = new ArrayList<>();
-        productLines.add(ProductLine.create(Product.create(1, "Product 1", 10.0, 10), 10));
-        productLines.add(ProductLine.create(Product.create(2, "Product 2", 20.0, 20), 20));
+        productLines.add(ProductLine.create(Product.create("1", "Product 1", 10.0, 10), 10));
+        productLines.add(ProductLine.create(Product.create("2", "Product 2", 20.0, 20), 20));
 
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        Order order = Order.create(1, user, productLines);
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        Order order = Order.create("1", user, productLines);
 
         assertNotNull(order);
-        assertEquals(1, order.getId());
+        assertEquals("1", order.getId());
         assertEquals(user, order.getUser());
         assertEquals(productLines, order.getProductLines());
     }
@@ -28,37 +28,37 @@ public class OrderTest {
     @Test
     void testCreateOrderWithInvalidId() {
         List<ProductLine> productLines = new ArrayList<>();
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        assertThrows(IllegalArgumentException.class, () -> Order.create(-1, user, productLines));
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        assertThrows(IllegalArgumentException.class, () -> Order.create(null, user, productLines));
     }
 
     @Test
     void testCreateOrderWithNullUser() {
         List<ProductLine> productLines = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> Order.create(1, null, productLines));
+        assertThrows(IllegalArgumentException.class, () -> Order.create("1", null, productLines));
     }
 
     @Test
     void testCreateOrderWithNullProductLines() {
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        assertThrows(IllegalArgumentException.class, () -> Order.create(1, user, null));
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        assertThrows(IllegalArgumentException.class, () -> Order.create("1", user, null));
     }
 
     @Test
     void testCreateOrderWithEmptyProductLines() {
         List<ProductLine> productLines = new ArrayList<>();
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        assertThrows(IllegalArgumentException.class, () -> Order.create(1, user, productLines));
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        assertThrows(IllegalArgumentException.class, () -> Order.create("1", user, productLines));
     }
 
     @Test
     void testAddProductLine() {
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        Product product = Product.create(1, "Product 1", 10.0, 10);
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        Product product = Product.create("1", "Product 1", 10.0, 10);
         ProductLine productLine1 = ProductLine.create(product, 3);
         List<ProductLine> productLineList = new ArrayList<>();
         productLineList.add(productLine1);
-        Order order = Order.create(1, user, productLineList);
+        Order order = Order.create("1", user, productLineList);
         ProductLine productLine = getProductLine(product);
         order.addProductLine(productLine);
         assertEquals(1, order.getProductLines().size());
@@ -73,12 +73,12 @@ public class OrderTest {
 
     @Test
     void testAddProductLineExisting() {
-        User user = User.create(1, "test@example.com", "password", "Test User", Role.USER);
-        Product product = Product.create(1, "Product 1", 10.0, 10);
+        User user = User.create("1", "test@example.com", "password", "Test User", Role.USER);
+        Product product = Product.create("1", "Product 1", 10.0, 10);
         ProductLine existingProductLine = getProductLine(product);
         List<ProductLine> productLines = new ArrayList<>();
         productLines.add(existingProductLine);
-        Order order = Order.create(1, user, productLines);
+        Order order = Order.create("1", user, productLines);
 
         ProductLine newProductLine = ProductLine.create(product, 5);
         order.addProductLine(newProductLine);

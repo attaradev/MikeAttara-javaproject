@@ -21,6 +21,7 @@ import dev.attara.stockify.application.service.usermanagement.updaterole.UpdateR
 import dev.attara.stockify.domain.exception.NotAuthorizedException;
 import dev.attara.stockify.domain.model.Role;
 import dev.attara.stockify.domain.model.User;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -33,6 +34,10 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Controller responsible for handling GraphQL queries and mutations related to user management.
+ * This controller manages operations such as adding, updating, deleting, and retrieving user information.
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -57,6 +62,12 @@ public class UserController {
 
     private final GetAllUsersHandler getAllUsersHandler;
 
+    /**
+     * Creates a new user.
+     *
+     * @param userData The data of the user to be created.
+     * @return The record of the created user.
+     */
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public UserRecord createUser(@Argument AddUser userData) {
@@ -66,17 +77,31 @@ public class UserController {
         return userRecord;
     }
 
+    /**
+     * Deletes a user.
+     *
+     * @param userId The ID of the user to be deleted.
+     * @return True if the user was successfully deleted, false otherwise.
+     */
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public boolean deleteUser(@Argument long userId) {
+    public boolean deleteUser(@Argument @NonNull String userId) {
         log.info("Deleting user with ID: {}", userId);
         boolean result = deleteUserHandler.handle(new DeleteUser(userId));
         log.info("User deleted successfully with ID: {}", userId);
         return result;
     }
 
+    /**
+     * Updates the email of a user.
+     *
+     * @param userId       The ID of the user whose email is to be updated.
+     * @param newEmail     The new email for the user.
+     * @param principal    The principal object representing the current authenticated user.
+     * @return The record of the updated user.
+     */
     @MutationMapping
-    public UserRecord updateEmail(@Argument long userId, @Argument String newEmail, Principal principal) {
+    public UserRecord updateEmail(@Argument @NonNull String userId, @Argument String newEmail, Principal principal) {
         User user = userProvider.get(principal);
         selfOrAdminOnly(userId, user);
         log.info("Updating email for user ID: {} with new email: {}", userId, newEmail);
@@ -85,8 +110,16 @@ public class UserController {
         return userRecord;
     }
 
+    /**
+     * Updates the name of a user.
+     *
+     * @param userId       The ID of the user whose name is to be updated.
+     * @param newName      The new name for the user.
+     * @param principal    The principal object representing the current authenticated user.
+     * @return The record of the updated user.
+     */
     @MutationMapping
-    public UserRecord updateName(@Argument long userId, @Argument String newName, Principal principal) {
+    public UserRecord updateName(@Argument @NonNull String userId, @Argument String newName, Principal principal) {
         User user = userProvider.get(principal);
         selfOrAdminOnly(userId, user);
         log.info("Updating name for user ID: {} with new name: {}", userId, newName);
@@ -95,19 +128,35 @@ public class UserController {
         return userRecord;
     }
 
+    /**
+     * Updates the role of a user.
+     *
+     * @param userId   The ID of the user whose role is to be updated.
+     * @param newRole  The new role for the user.
+     * @return The record of the updated user.
+     * @throws Exception If an error occurs during the update operation.
+     */
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public UserRecord updateRole(@Argument long userId, @Argument Role newRole) throws Exception {
+    public UserRecord updateRole(@Argument @NonNull String userId, @Argument Role newRole) throws Exception {
         log.info("Updating role for user ID: {} with new role: {}", userId, newRole);
         UserRecord userRecord = updateRoleHandler.handle(new UpdateRole(userId, newRole));
         log.info("Role updated successfully for user ID: {}", userId);
         return userRecord;
     }
 
+    /**
+     * Updates the password of a user.
+     *
+     * @param userId       The ID of the user whose password is to be updated.
+     * @param newPassword  The new password for the user.
+     * @param principal    The principal object representing the current authenticated user.
+     * @return The record of the updated user.
+     */
     @MutationMapping
-    public UserRecord updatePassword(@Argument long userId, @Argument String newPassword, Principal principal) {
+    public UserRecord updatePassword(@Argument @NonNull String userId, @Argument String newPassword, Principal principal) {
         User user = userProvider.get(principal);
-        if (user.getId() != userId) {
+        if (user.getId().equals(userId)) {
             log.error("User with ID: {} is not authorized to change password for user with ID: {}", user.getId(), userId);
             throw new NotAuthorizedException();
         }
@@ -117,6 +166,11 @@ public class UserController {
         return userRecord;
     }
 
+    /**
+     * Retrieves a list of all users.
+     *
+     * @return The list of all users.
+     */
     @QueryMapping
     @Secured("ROLE_ADMIN")
     public List<UserRecord> users() {
@@ -126,8 +180,15 @@ public class UserController {
         return users;
     }
 
+    /**
+     * Retrieves information about a specific user.
+     *
+     * @param userId       The ID of the user to retrieve.
+     * @param principal    The principal object representing the current authenticated user.
+     * @return The record of the specified user.
+     */
     @QueryMapping
-    public UserRecord user(@Argument long userId, Principal principal) {
+    public UserRecord user(@Argument @NonNull String userId, Principal principal) {
         User user = userProvider.get(principal);
         selfOrAdminOnly(userId, user);
         log.info("Retrieving user with ID: {}", userId);
@@ -136,8 +197,14 @@ public class UserController {
         return userRecord;
     }
 
-    private void selfOrAdminOnly(long userId, User user) {
-        if (user.isNotAdmin() && userId != user.getId()) {
+    /**
+     * Ensures that only the user or an admin can access the user's information.
+     *
+     * @param userId   The ID of the user being accessed.
+     * @param user     The user object representing the current authenticated user.
+     */
+    private void selfOrAdminOnly(@NonNull String userId, User user) {
+        if (user.isNotAdmin() && userId.equals(user.getId())) {
             log.error("User with ID: {} is not authorized to access user with ID: {}", user.getId(), userId);
             throw new NotAuthorizedException();
         }

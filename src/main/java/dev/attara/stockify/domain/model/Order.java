@@ -8,11 +8,11 @@ import java.util.List;
 @Getter
 public class Order {
 
-    private final long id;
+    private final String id;
     private final User user;
     private final List<ProductLine> productLines;
 
-    private Order(long id, User user, List<ProductLine> productLines) {
+    private Order(String id, User user, List<ProductLine> productLines) {
         this.id = id;
         this.user = user;
         this.productLines = productLines;
@@ -27,8 +27,8 @@ public class Order {
      * @return the created order
      * @throws IllegalArgumentException if the ID is invalid, user is null, or product lines are empty
      */
-    public static Order create(long id, @NonNull User user, @NonNull List<ProductLine> productLines) throws IllegalArgumentException {
-        if (id < 0) throw new IllegalArgumentException("Invalid order ID");
+    public static Order create(String id, @NonNull User user, @NonNull List<ProductLine> productLines) throws IllegalArgumentException {
+        if (id == null) throw new IllegalArgumentException("Invalid order ID");
         if (productLines.isEmpty()) throw new IllegalArgumentException("Product lines cannot be empty");
         return new Order(id, user, productLines);
     }

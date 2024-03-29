@@ -5,5 +5,5 @@ import lombok.NonNull;
 /**
  * A record representing a request to update a user's password.
  */
-public record UpdatePassword(long id, @NonNull String newPassword) {
+public record UpdatePassword(@NonNull String id, @NonNull String newPassword) {
 }

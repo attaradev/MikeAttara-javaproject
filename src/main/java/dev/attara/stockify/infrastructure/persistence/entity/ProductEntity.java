@@ -12,7 +12,7 @@ import lombok.Setter;
 public class ProductEntity {
 
     @Id
-    private long id;
+    private String id;
 
     @Column(nullable = false)
     private String name;

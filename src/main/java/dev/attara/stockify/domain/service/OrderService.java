@@ -25,7 +25,7 @@ public interface OrderService {
      * @param productLines the list of product lines to be updated in the order
      * @return the updated order
      */
-    Order updateOrder(long orderId, List<ProductLine> productLines);
+    Order updateOrder(String orderId, List<ProductLine> productLines);
 
     /**
      * Creates a new product line based on the provided product line data.

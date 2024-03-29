@@ -1,7 +1,6 @@
 package dev.attara.stockify.domain.repository;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Base repository interface defining common operations for repositories.
@@ -9,17 +8,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @param <Model> the type of the model entity managed by the repository
  */
 public interface BaseRepository<Model> {
-    AtomicLong atl = new AtomicLong(0);
-
-    /**
-     * Generates and returns the next ID for a new entity.
-     *
-     * @return the next available ID
-     */
-    default long nextId() {
-        return atl.addAndGet(1L);
-    }
-
     /**
      * Retrieves all entities from the repository.
      *

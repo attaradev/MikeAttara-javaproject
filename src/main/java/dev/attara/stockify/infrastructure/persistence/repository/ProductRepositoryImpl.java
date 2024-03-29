@@ -37,7 +37,7 @@ public class ProductRepositoryImpl implements ProductRepository {
      * @throws ProductNotFoundException If no product exists with the given ID.
      */
     @Override
-    public Product findById(long id) throws ProductNotFoundException {
+    public Product findById(String id) throws ProductNotFoundException {
         try {
             ProductEntity productEntity = entityManager.find(ProductEntity.class, id);
             return productMapper.mapToDomain(productEntity);

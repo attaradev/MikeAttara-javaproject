@@ -15,7 +15,7 @@ import java.util.List;
 public class UserEntity {
 
     @Id
-    private long id;
+    private String id;
 
     @Column
     private String name;

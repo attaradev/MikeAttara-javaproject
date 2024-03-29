@@ -30,7 +30,7 @@ public class UpdatePasswordHandler implements ServiceHandler<UpdatePassword, Use
     @Override
     public UserRecord handle(UpdatePassword updatePassword) {
         validator.validate(updatePassword);
-        long id = updatePassword.id();
+        String id = updatePassword.id();
         String newPassword = passwordEncoder.encode(updatePassword.newPassword());
         User user = repository.findById(id);
         user.setPassword(newPassword);

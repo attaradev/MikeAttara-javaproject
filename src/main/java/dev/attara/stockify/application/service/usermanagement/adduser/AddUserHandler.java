@@ -2,6 +2,7 @@ package dev.attara.stockify.application.service.usermanagement.adduser;
 
 import dev.attara.stockify.application.dto.UserRecord;
 import dev.attara.stockify.application.service.ServiceHandler;
+import dev.attara.stockify.application.util.IDGenerator;
 import dev.attara.stockify.domain.model.Role;
 import dev.attara.stockify.domain.model.User;
 import dev.attara.stockify.domain.repository.UserRepository;
@@ -22,9 +23,14 @@ public class AddUserHandler implements ServiceHandler<AddUser, UserRecord> {
     private static final Logger logger = LoggerFactory.getLogger(AddUserHandler.class);
 
     private final UserRepository repository;
+
     private final AddUserValidator validator;
+
     private final UserMapper mapper;
+
     private final PasswordEncoder passwordEncoder;
+
+    private final IDGenerator idGenerator;
 
     /**
      * Handles the request to add a new user.
@@ -42,7 +48,7 @@ public class AddUserHandler implements ServiceHandler<AddUser, UserRecord> {
             String encodedPassword = passwordEncoder.encode(addUser.password());
             String name = addUser.name();
             Role role = addUser.role() != null ? addUser.role() : Role.USER;
-            long id = repository.nextId();
+            String id = idGenerator.generateID();
 
             User user = User.create(id, email, encodedPassword, name, role);
             repository.save(user);

@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class Product {
 
-    private final long id;
+    private final String id;
     private String name;
     private int stock;
     private double price;
 
-    private Product(long id, String name, int stock, double price) {
+    private Product(String id, String name, int stock, double price) {
         this.id = id;
         this.name = name;
         this.stock = stock;
@@ -31,8 +31,8 @@ public class Product {
      * @return the created product
      * @throws IllegalArgumentException if the ID is invalid, name is null, price is negative, or stock is negative
      */
-    public static Product create(long id, @NonNull String name, double price, int stock) throws IllegalArgumentException {
-        if (id < 1) throw new IllegalArgumentException("Invalid product ID");
+    public static Product create(String id, @NonNull String name, double price, int stock) throws IllegalArgumentException {
+        if (id == null) throw new IllegalArgumentException("Invalid product ID");
         return new Product(id, validateName(name), validateQuantity(stock), validatePrice(price));
     }
 
