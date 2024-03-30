@@ -6,31 +6,47 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a product line entity in the database.
+ * Represents an entity for the product line.
  */
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@IdClass(ProductLineId.class)
 public class ProductLineEntity {
 
-    /** The unique identifier of the product line. */
+    /**
+     * The order ID.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "order_id", nullable = false)
+    private String orderId;
 
-    /** The quantity of the product in the order. */
-    @Column(nullable = false)
-    private int quantity;
+    /**
+     * The product ID.
+     */
+    @Id
+    @Column(name = "product_id", nullable = false)
+    private String productId;
 
-    /** The product associated with this product line. */
+    /**
+     * The order associated with this product line.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private OrderEntity order;
+
+    /**
+     * The product associated with this product line.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ProductEntity product;
 
-    /** The order associated with this product line. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private OrderEntity order;
+    /**
+     * The quantity of the product in the order.
+     */
+    @Column(nullable = false)
+    private int quantity;
 
 }

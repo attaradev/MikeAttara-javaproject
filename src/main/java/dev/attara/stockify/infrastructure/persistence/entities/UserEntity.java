@@ -38,7 +38,7 @@ public class UserEntity {
     private Role role;
 
     /** The list of orders associated with this user. */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<OrderEntity> orders;
 
 }

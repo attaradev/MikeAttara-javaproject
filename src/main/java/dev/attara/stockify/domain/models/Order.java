@@ -3,19 +3,21 @@ package dev.attara.stockify.domain.models;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class Order {
 
     private final String id;
     private final User user;
-    private final List<ProductLine> productLines;
+    private final List<ProductLine> productLines = new ArrayList<>();
 
     private Order(String id, User user, List<ProductLine> productLines) {
         this.id = id;
         this.user = user;
-        this.productLines = productLines;
+        productLines.forEach(this::addProductLine);
     }
 
     /**
@@ -40,7 +42,7 @@ public class Order {
      */
     public void addProductLine(ProductLine productLine) {
         for (ProductLine existingProductLine : productLines) {
-            if (existingProductLine.getProduct().getId() == productLine.getProduct().getId()) {
+            if (Objects.equals(existingProductLine.getProduct().getId(), productLine.getProduct().getId())) {
                 existingProductLine.setQuantity(existingProductLine.getQuantity() + productLine.getQuantity());
                 return;
             }

@@ -4,10 +4,7 @@ import dev.attara.stockify.domain.exceptions.OrderNotFoundException;
 import dev.attara.stockify.domain.models.Order;
 import dev.attara.stockify.domain.repositories.OrderRepository;
 import dev.attara.stockify.infrastructure.persistence.entities.OrderEntity;
-import dev.attara.stockify.infrastructure.persistence.entities.ProductLineEntity;
 import dev.attara.stockify.infrastructure.persistence.mappers.OrderMapper;
-import dev.attara.stockify.infrastructure.persistence.mappers.ProductMapper;
-import dev.attara.stockify.infrastructure.persistence.mappers.UserMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -26,10 +23,6 @@ import java.util.stream.Collectors;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderMapper orderMapper;
-
-    private final ProductMapper productMapper;
-
-    private final UserMapper userMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -88,20 +81,10 @@ public class OrderRepositoryImpl implements OrderRepository {
      */
     @Override
     public void save(Order order) {
-        OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setId(order.getId());
-        orderEntity.setUser(userMapper.mapToEntity(order.getUser()));
-        entityManager.merge(orderEntity);
-        List<ProductLineEntity> productLineEntities = order.getProductLines().stream().map(productLine -> {
-            ProductLineEntity productLineEntity = new ProductLineEntity();
-            productLineEntity.setProduct(productMapper.mapToEntity(productLine.getProduct()));
-            productLineEntity.setOrder(orderEntity);
-            productLineEntity.setQuantity(productLine.getQuantity());
-            return productLineEntity;
-        }).toList();
-        productLineEntities.forEach(this::saveProductLine);
+        entityManager.merge(orderMapper.mapToEntity(order));
         entityManager.flush();
     }
+
 
     /**
      * Deletes an order from the database.
@@ -112,9 +95,5 @@ public class OrderRepositoryImpl implements OrderRepository {
     public void delete(Order order) {
         OrderEntity managedOrder = entityManager.find(OrderEntity.class, order.getId());
         entityManager.remove(managedOrder);
-    }
-
-    private void saveProductLine(ProductLineEntity productLineEntity){
-        entityManager.merge(productLineEntity);
     }
 }

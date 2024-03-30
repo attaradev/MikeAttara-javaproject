@@ -7,6 +7,7 @@ import dev.attara.stockify.domain.models.Order;
 import dev.attara.stockify.domain.models.ProductLine;
 import dev.attara.stockify.domain.models.User;
 import dev.attara.stockify.infrastructure.persistence.entities.OrderEntity;
+import dev.attara.stockify.infrastructure.persistence.entities.ProductLineEntity;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderMapper implements Mapper<Order, OrderRecord, OrderEntity> {
 
-    private final ProductLineMapper productLineMapper;
+    private final ProductMapper productMapper;
 
     private final UserMapper userMapper;
 
@@ -33,8 +34,11 @@ public class OrderMapper implements Mapper<Order, OrderRecord, OrderEntity> {
      */
     public Order mapToDomain(@NonNull OrderEntity entity) {
         User user = userMapper.mapToDomain(entity.getUser());
-        List<ProductLine> productLines = entity.getProductLines().stream()
-                .map(productLineMapper::mapToDomain)
+        List<ProductLine> productLines = entity.getProductLines().values().stream()
+                .map(productLineEntity -> ProductLine.create(productMapper.mapToDomain(
+                                productLineEntity.getProduct()),
+                        productLineEntity.getQuantity()
+                ))
                 .toList();
         return Order.create(entity.getId(), user, productLines);
     }
@@ -47,7 +51,7 @@ public class OrderMapper implements Mapper<Order, OrderRecord, OrderEntity> {
      */
     public OrderRecord mapToRecord(@NonNull Order model) {
         List<ProductLineRecord> productLineRecords = model.getProductLines().stream()
-                .map(productLineMapper::mapToRecord)
+                .map(productLine -> new ProductLineRecord(productMapper.mapToRecord(productLine.getProduct()), productLine.getQuantity()))
                 .collect(Collectors.toList());
         return new OrderRecord(model.getId(), userMapper.mapToRecord(model.getUser()), productLineRecords);
     }
@@ -59,15 +63,17 @@ public class OrderMapper implements Mapper<Order, OrderRecord, OrderEntity> {
      * @return The mapped OrderEntity database entity object.
      */
     public OrderEntity mapToEntity(@NonNull Order order) {
-        OrderEntity entity = new OrderEntity();
-        entity.setId(order.getId());
-        entity.setUser(userMapper.mapToEntity(order.getUser()));
-        List<ProductLine> productLines = order.getProductLines();
-        if (productLines != null && !productLines.isEmpty()) {
-            entity.setProductLines(productLines.stream()
-                    .map(productLineMapper::mapToEntity)
-                    .toList());
-        }
-        return entity;
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setId(order.getId());
+        orderEntity.setUser(userMapper.mapToEntity(order.getUser()));
+        orderEntity.addProductLines(order.getProductLines().stream().map(productLine -> {
+            ProductLineEntity productLineEntity = new ProductLineEntity();
+            productLineEntity.setQuantity(productLine.getQuantity());
+            productLineEntity.setProductId(productLine.getProduct().getId());
+            productLineEntity.setProduct(productMapper.mapToEntity(productLine.getProduct()));
+            return productLineEntity;
+        }).toList());
+        return orderEntity;
     }
+
 }
