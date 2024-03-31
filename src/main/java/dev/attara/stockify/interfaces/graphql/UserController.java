@@ -1,7 +1,6 @@
 package dev.attara.stockify.interfaces.graphql;
 
 import dev.attara.stockify.application.dtos.UserRecord;
-import dev.attara.stockify.infrastructure.security.AuthenticatedUserProvider;
 import dev.attara.stockify.application.services.usermanagement.adduser.AddUser;
 import dev.attara.stockify.application.services.usermanagement.adduser.AddUserHandler;
 import dev.attara.stockify.application.services.usermanagement.deleteuser.DeleteUser;
@@ -21,6 +20,7 @@ import dev.attara.stockify.application.services.usermanagement.updaterole.Update
 import dev.attara.stockify.domain.exceptions.NotAuthorizedException;
 import dev.attara.stockify.domain.models.Role;
 import dev.attara.stockify.domain.models.User;
+import dev.attara.stockify.infrastructure.security.AuthenticatedUserProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,10 +71,15 @@ public class UserController {
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public UserRecord createUser(@Argument AddUser userData) {
-        log.info("Creating user with data: {}", userData);
-        UserRecord userRecord = addUserHandler.handle(userData);
-        log.info("User created successfully: {}", userRecord);
-        return userRecord;
+        try {
+            log.info("Creating user with data: {}", userData);
+            UserRecord userRecord = addUserHandler.handle(userData);
+            log.info("User created successfully: {}", userRecord);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error creating user: {}", e.getMessage());
+            throw new RuntimeException("Failed to create user", e);
+        }
     }
 
     /**
@@ -86,10 +91,15 @@ public class UserController {
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public boolean deleteUser(@Argument @NonNull String userId) {
-        log.info("Deleting user with ID: {}", userId);
-        boolean result = deleteUserHandler.handle(new DeleteUser(userId));
-        log.info("User deleted successfully with ID: {}", userId);
-        return result;
+        try {
+            log.info("Deleting user with ID: {}", userId);
+            boolean result = deleteUserHandler.handle(new DeleteUser(userId));
+            log.info("User deleted successfully with ID: {}", userId);
+            return result;
+        } catch (Exception e) {
+            log.error("Error deleting user: {}", e.getMessage());
+            throw new RuntimeException("Failed to delete user", e);
+        }
     }
 
     /**
@@ -102,12 +112,17 @@ public class UserController {
      */
     @MutationMapping
     public UserRecord updateEmail(@Argument @NonNull String userId, @Argument String newEmail, Principal principal) {
-        User user = userProvider.get(principal);
-        selfOrAdminOnly(userId, user);
-        log.info("Updating email for user ID: {} with new email: {}", userId, newEmail);
-        UserRecord userRecord = updateEmailHandler.handle(new UpdateEmail(userId, newEmail));
-        log.info("Email updated successfully for user ID: {}", userId);
-        return userRecord;
+        try {
+            User user = userProvider.get(principal);
+            selfOrAdminOnly(userId, user);
+            log.info("Updating email for user ID: {} with new email: {}", userId, newEmail);
+            UserRecord userRecord = updateEmailHandler.handle(new UpdateEmail(userId, newEmail));
+            log.info("Email updated successfully for user ID: {}", userId);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error updating email: {}", e.getMessage());
+            throw new RuntimeException("Failed to update email", e);
+        }
     }
 
     /**
@@ -120,12 +135,17 @@ public class UserController {
      */
     @MutationMapping
     public UserRecord updateName(@Argument @NonNull String userId, @Argument String newName, Principal principal) {
-        User user = userProvider.get(principal);
-        selfOrAdminOnly(userId, user);
-        log.info("Updating name for user ID: {} with new name: {}", userId, newName);
-        UserRecord userRecord = updateNameHandler.handle(new UpdateName(userId, newName));
-        log.info("Name updated successfully for user ID: {}", userId);
-        return userRecord;
+        try {
+            User user = userProvider.get(principal);
+            selfOrAdminOnly(userId, user);
+            log.info("Updating name for user ID: {} with new name: {}", userId, newName);
+            UserRecord userRecord = updateNameHandler.handle(new UpdateName(userId, newName));
+            log.info("Name updated successfully for user ID: {}", userId);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error updating name: {}", e.getMessage());
+            throw new RuntimeException("Failed to update name", e);
+        }
     }
 
     /**
@@ -134,15 +154,19 @@ public class UserController {
      * @param userId   The ID of the user whose role is to be updated.
      * @param newRole  The new role for the user.
      * @return The record of the updated user.
-     * @throws Exception If an error occurs during the update operation.
      */
     @MutationMapping
     @Secured("ROLE_ADMIN")
-    public UserRecord updateRole(@Argument @NonNull String userId, @Argument Role newRole) throws Exception {
-        log.info("Updating role for user ID: {} with new role: {}", userId, newRole);
-        UserRecord userRecord = updateRoleHandler.handle(new UpdateRole(userId, newRole));
-        log.info("Role updated successfully for user ID: {}", userId);
-        return userRecord;
+    public UserRecord updateRole(@Argument @NonNull String userId, @Argument Role newRole) {
+        try {
+            log.info("Updating role for user ID: {} with new role: {}", userId, newRole);
+            UserRecord userRecord = updateRoleHandler.handle(new UpdateRole(userId, newRole));
+            log.info("Role updated successfully for user ID: {}", userId);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error updating role: {}", e.getMessage());
+            throw new RuntimeException("Failed to update role", e);
+        }
     }
 
     /**
@@ -155,15 +179,20 @@ public class UserController {
      */
     @MutationMapping
     public UserRecord updatePassword(@Argument @NonNull String userId, @Argument String newPassword, Principal principal) {
-        User user = userProvider.get(principal);
-        if (user.getId().equals(userId)) {
-            log.error("User with ID: {} is not authorized to change password for user with ID: {}", user.getId(), userId);
-            throw new NotAuthorizedException();
+        try {
+            User user = userProvider.get(principal);
+            if (user.getId().equals(userId)) {
+                log.error("User with ID: {} is not authorized to change password for user with ID: {}", user.getId(), userId);
+                throw new NotAuthorizedException();
+            }
+            log.info("Updating password for user ID: {}", userId);
+            UserRecord userRecord = updatePasswordHandler.handle(new UpdatePassword(userId, newPassword));
+            log.info("Password updated successfully for user ID: {}", userId);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error updating password: {}", e.getMessage());
+            throw new RuntimeException("Failed to update password", e);
         }
-        log.info("Updating password for user ID: {}", userId);
-        UserRecord userRecord = updatePasswordHandler.handle(new UpdatePassword(userId, newPassword));
-        log.info("Password updated successfully for user ID: {}", userId);
-        return userRecord;
     }
 
     /**
@@ -174,10 +203,15 @@ public class UserController {
     @QueryMapping
     @Secured("ROLE_ADMIN")
     public List<UserRecord> users() {
-        log.info("Retrieving all users");
-        List<UserRecord> users = getAllUsersHandler.handle(new GetAllUsers());
-        log.info("Retrieved all users: {}", users);
-        return users;
+        try {
+            log.info("Retrieving all users");
+            List<UserRecord> users = getAllUsersHandler.handle(new GetAllUsers());
+            log.info("Retrieved all users: {}", users);
+            return users;
+        } catch (Exception e) {
+            log.error("Error retrieving all users: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve all users", e);
+        }
     }
 
     /**
@@ -189,12 +223,17 @@ public class UserController {
      */
     @QueryMapping
     public UserRecord user(@Argument @NonNull String userId, Principal principal) {
-        User user = userProvider.get(principal);
-        selfOrAdminOnly(userId, user);
-        log.info("Retrieving user with ID: {}", userId);
-        UserRecord userRecord = getUserHandler.handle(new GetUser(userId));
-        log.info("Retrieved user with ID {}: {}", userId, userRecord);
-        return userRecord;
+        try {
+            User user = userProvider.get(principal);
+            selfOrAdminOnly(userId, user);
+            log.info("Retrieving user with ID: {}", userId);
+            UserRecord userRecord = getUserHandler.handle(new GetUser(userId));
+            log.info("Retrieved user with ID {}: {}", userId, userRecord);
+            return userRecord;
+        } catch (Exception e) {
+            log.error("Error retrieving user: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve user", e);
+        }
     }
 
     /**

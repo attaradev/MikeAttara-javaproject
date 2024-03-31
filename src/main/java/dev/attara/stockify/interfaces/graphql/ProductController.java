@@ -16,8 +16,7 @@ import dev.attara.stockify.application.services.productmanagement.updateproduct.
 import dev.attara.stockify.application.services.productmanagement.updateproduct.UpdateProductHandler;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -31,6 +30,7 @@ import java.util.List;
  * Controller responsible for handling GraphQL queries and mutations related to products.
  * This controller manages operations such as adding, updating, deleting, and retrieving products and product-related data.
  */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
@@ -48,7 +48,6 @@ public class ProductController {
 
     private final GetLowStockProductsHandler getLowStockProductsHandler;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     /**
      * Creates a new product.
@@ -59,10 +58,15 @@ public class ProductController {
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public ProductRecord createProduct(@Argument AddProduct productData) {
-        logger.info("Creating product: {}", productData);
-        ProductRecord productRecord = addProductHandler.handle(productData);
-        logger.info("Product created successfully: {}", productRecord);
-        return productRecord;
+        try {
+            log.info("Creating product: {}", productData);
+            ProductRecord productRecord = addProductHandler.handle(productData);
+            log.info("Product created successfully: {}", productRecord);
+            return productRecord;
+        } catch (Exception e) {
+            log.error("Error creating product: {}", e.getMessage());
+            throw new RuntimeException("Failed to create product", e);
+        }
     }
 
     /**
@@ -75,10 +79,15 @@ public class ProductController {
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public ProductRecord updateProduct(@Argument @NonNull String productId, @Argument ProductUpdateData productData) {
-        logger.info("Updating product with ID {}: {}", productId, productData);
-        ProductRecord productRecord = updateProductHandler.handle(new UpdateProduct(productId, productData));
-        logger.info("Product updated successfully: {}", productRecord);
-        return productRecord;
+        try {
+            log.info("Updating product with ID {}: {}", productId, productData);
+            ProductRecord productRecord = updateProductHandler.handle(new UpdateProduct(productId, productData));
+            log.info("Product updated successfully: {}", productRecord);
+            return productRecord;
+        } catch (Exception e) {
+            log.error("Error updating product: {}", e.getMessage());
+            throw new RuntimeException("Failed to update product", e);
+        }
     }
 
     /**
@@ -90,14 +99,19 @@ public class ProductController {
     @MutationMapping
     @Secured("ROLE_ADMIN")
     public boolean deleteProduct(@Argument @NonNull String productId) {
-        logger.info("Deleting product with ID: {}", productId);
-        boolean deleted = deleteProductHandler.handle(new DeleteProduct(productId));
-        if (deleted) {
-            logger.info("Product deleted successfully with ID: {}", productId);
-        } else {
-            logger.warn("Product not found with ID: {}", productId);
+        try {
+            log.info("Deleting product with ID: {}", productId);
+            boolean deleted = deleteProductHandler.handle(new DeleteProduct(productId));
+            if (deleted) {
+                log.info("Product deleted successfully with ID: {}", productId);
+            } else {
+                log.warn("Product not found with ID: {}", productId);
+            }
+            return deleted;
+        } catch (Exception e) {
+            log.error("Error deleting product: {}", e.getMessage());
+            throw new RuntimeException("Failed to delete product", e);
         }
-        return deleted;
     }
 
     /**
@@ -107,10 +121,15 @@ public class ProductController {
      */
     @QueryMapping
     public List<ProductRecord> products() {
-        logger.info("Fetching all products");
-        List<ProductRecord> products = getAllProductsHandler.handle(new GetAllProducts());
-        logger.info("Fetched {} products", products.size());
-        return products;
+        try {
+            log.info("Fetching all products");
+            List<ProductRecord> products = getAllProductsHandler.handle(new GetAllProducts());
+            log.info("Fetched {} products", products.size());
+            return products;
+        } catch (Exception e) {
+            log.error("Error retrieving all products: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve all products", e);
+        }
     }
 
     /**
@@ -121,10 +140,15 @@ public class ProductController {
      */
     @QueryMapping
     public ProductRecord product(@Argument @NonNull String productId) {
-        logger.info("Fetching product with ID: {}", productId);
-        ProductRecord productRecord = getProductHandler.handle(new GetProduct(productId));
-        logger.info("Fetched product: {}", productRecord);
-        return productRecord;
+        try {
+            log.info("Fetching product with ID: {}", productId);
+            ProductRecord productRecord = getProductHandler.handle(new GetProduct(productId));
+            log.info("Fetched product: {}", productRecord);
+            return productRecord;
+        } catch (Exception e) {
+            log.error("Error retrieving product: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve product", e);
+        }
     }
 
     /**
@@ -136,9 +160,14 @@ public class ProductController {
     @QueryMapping
     @Secured("ROLE_ADMIN")
     List<ProductRecord> lowStockProducts(@Argument int threshold) {
-        logger.info("Fetching low stock products with threshold: {}", threshold);
-        List<ProductRecord> lowStockProducts = getLowStockProductsHandler.handle(new GetLowStockProducts(threshold));
-        logger.info("Fetched {} low stock products", lowStockProducts.size());
-        return lowStockProducts;
+        try {
+            log.info("Fetching low stock products with threshold: {}", threshold);
+            List<ProductRecord> lowStockProducts = getLowStockProductsHandler.handle(new GetLowStockProducts(threshold));
+            log.info("Fetched {} low stock products", lowStockProducts.size());
+            return lowStockProducts;
+        } catch (Exception e) {
+            log.error("Error retrieving low stock products: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve low stock products", e);
+        }
     }
 }

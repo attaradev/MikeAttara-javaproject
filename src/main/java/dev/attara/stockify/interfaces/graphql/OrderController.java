@@ -2,7 +2,6 @@ package dev.attara.stockify.interfaces.graphql;
 
 import dev.attara.stockify.application.dtos.OrderRecord;
 import dev.attara.stockify.application.dtos.ProductLineRecord;
-import dev.attara.stockify.infrastructure.security.AuthenticatedUserProvider;
 import dev.attara.stockify.application.services.ordermanagement.createorder.CreateOrder;
 import dev.attara.stockify.application.services.ordermanagement.createorder.CreateOrderHandler;
 import dev.attara.stockify.application.services.ordermanagement.createorder.ProductLineData;
@@ -18,12 +17,10 @@ import dev.attara.stockify.application.services.ordermanagement.getordersbyuser.
 import dev.attara.stockify.application.services.ordermanagement.getordersbyuser.GetOrdersByUserHandler;
 import dev.attara.stockify.application.services.ordermanagement.updateorder.UpdateOrder;
 import dev.attara.stockify.application.services.ordermanagement.updateorder.UpdateOrderHandler;
-import dev.attara.stockify.domain.exceptions.NotAuthorizedException;
-import dev.attara.stockify.domain.models.User;
+import dev.attara.stockify.infrastructure.security.AuthenticatedUserProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -37,12 +34,11 @@ import java.util.List;
  * Controller responsible for handling GraphQL queries and mutations related to orders.
  * This controller manages operations such as creating, updating, deleting, and retrieving orders and order-related data.
  */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 public class OrderController {
-
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     private final AuthenticatedUserProvider userProvider;
 
@@ -70,9 +66,12 @@ public class OrderController {
     @MutationMapping
     public OrderRecord createOrder(@Argument List<ProductLineData> productLines, Principal principal) {
         try {
-            return createOrderHandler.handle(new CreateOrder(productLines, userProvider.get(principal)));
+            log.info("Creating order with product line(s): {} for email: {}", productLines, principal.getName());
+            OrderRecord orderRecord = createOrderHandler.handle(new CreateOrder(productLines, userProvider.get(principal)));
+            log.info("Order created successfully: {}", orderRecord);
+            return orderRecord;
         } catch (Exception e) {
-            logger.error("Error occurred while creating order: {}", e.getMessage(), e);
+            log.error("Error occurred while creating order: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -88,9 +87,11 @@ public class OrderController {
     @MutationMapping
     public OrderRecord updateOrder(@Argument @NonNull String orderId, @Argument List<ProductLineData> productLines, Principal principal) {
         try {
-            return updateOrderHandler.handle(new UpdateOrder(orderId, productLines, userProvider.get(principal)));
+            OrderRecord orderRecord = updateOrderHandler.handle(new UpdateOrder(orderId, productLines, userProvider.get(principal)));
+            log.info("Order updated successfully: {}", orderRecord);
+            return orderRecord;
         } catch (Exception e) {
-            logger.error("Error occurred while updating order: {}", e.getMessage(), e);
+            log.error("Error occurred while updating order: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -105,9 +106,15 @@ public class OrderController {
     @MutationMapping
     public boolean deleteOrder(@Argument @NonNull String orderId, Principal principal) {
         try {
-            return deleteOrderHandler.handle(new DeleteOrder(orderId, userProvider.get(principal)));
+            boolean deleted = deleteOrderHandler.handle(new DeleteOrder(orderId, userProvider.get(principal)));
+            if (deleted) {
+                log.info("Order with ID: {} deleted successfully", orderId);
+            } else {
+                log.warn("Order not found with ID: {}", orderId);
+            }
+            return deleted;
         } catch (Exception e) {
-            logger.error("Error occurred while deleting order: {}", e.getMessage(), e);
+            log.error("Error occurred while deleting order: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -122,9 +129,11 @@ public class OrderController {
     @QueryMapping
     public OrderRecord order(@Argument @NonNull String orderId, Principal principal) {
         try {
-            return getOrderHandler.handle(new GetOrder(orderId, userProvider.get(principal)));
+            OrderRecord orderRecord = getOrderHandler.handle(new GetOrder(orderId, userProvider.get(principal)));
+            log.info("Order retrieved successfully: {}", orderRecord);
+            return orderRecord;
         } catch (Exception e) {
-            logger.error("Error occurred while fetching order: {}", e.getMessage(), e);
+            log.error("Error occurred while fetching order: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -138,13 +147,12 @@ public class OrderController {
     @QueryMapping
     public List<OrderRecord> orders(Principal principal) {
         try {
-            User user = userProvider.get(principal);
-            if (user.isNotAdmin()) {
-                return getOrdersByUserHandler.handle(new GetOrdersByUser(user.getId()));
-            }
-            return getAllOrdersHandler.handle(new GetAllOrders());
+            log.info("Fetching orders");
+            List<OrderRecord> orders = getAllOrdersHandler.handle(new GetAllOrders(userProvider.get(principal)));
+            log.info("Fetched {} orders", orders.size());
+            return orders;
         } catch (Exception e) {
-            logger.error("Error occurred while fetching orders: {}", e.getMessage(), e);
+            log.error("Error occurred while fetching orders: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -159,11 +167,12 @@ public class OrderController {
     @QueryMapping
     public List<OrderRecord> ordersByUser(@Argument @NonNull String userId, Principal principal) {
         try {
-            User user = userProvider.get(principal);
-            if (user.isNotAdmin() && user.getId().equals(userId)) throw new NotAuthorizedException();
-            return getOrdersByUserHandler.handle(new GetOrdersByUser(userId));
+            log.info("Retrieving orders by user ID: {}", userId);
+            List<OrderRecord> orders = getOrdersByUserHandler.handle(new GetOrdersByUser(userId, userProvider.get(principal)));
+            log.info("Fetched {} orders for user ID: {}", orders.size(), userId);
+            return orders;
         } catch (Exception e) {
-            logger.error("Error occurred while fetching orders by user: {}", e.getMessage(), e);
+            log.error("Error occurred while fetching orders by user: {}", e.getMessage(), e);
             throw e;
         }
     }
@@ -178,9 +187,12 @@ public class OrderController {
     @QueryMapping
     public List<ProductLineRecord> productsInOrder(@Argument @NonNull String orderId, Principal principal) {
         try {
-            return getOrderProductsHandler.handle(new GetOrderProducts(orderId, userProvider.get(principal)));
+            log.info("Retrieving order by ID: {}", orderId);
+            List<ProductLineRecord> products = getOrderProductsHandler.handle(new GetOrderProducts(orderId, userProvider.get(principal)));
+            log.info("Fetched {} products for order ID: {}", products.size(), orderId);
+            return products;
         } catch (Exception e) {
-            logger.error("Error occurred while fetching products in order: {}", e.getMessage(), e);
+            log.error("Error occurred while fetching products in order: {}", e.getMessage(), e);
             throw e;
         }
     }
